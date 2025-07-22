@@ -1502,7 +1502,7 @@ test('Case Studies Page',async({page})=>{
 });
 
 // Checking Community Page
-test.only('Community Page',async({page})=>{
+test('Community Page',async({page})=>{
     if(await urlStatus(page)){
             try {
                     const CommunityButton = page.locator("xpath=(//a[normalize-space()='Community'])[1]");
@@ -1745,6 +1745,24 @@ test('FAQ Page',async({page})=>{
                     await scrolltoTop(page);
                     // take screenshot
                     await takeScreenshot(page,"FAQPage");
+
+                    // Header checking
+                    const header = await elementCheck(page,"//span[@class='text-xgreen' and normalize-space()='Questions']","header","FAQ");
+                    expect.soft(header).toBeTruthy();
+                    // para checking
+                    const para = await elementCheck(page,"//p[contains(normalize-space(),'At imaginX, we know you have questions about how our XR platform, iXGenie')]","para","FAQ");
+                    expect.soft(para).toBeTruthy();
+                    // Exspanding each question
+                    const questions = await page.locator("//button[@onclick]/span");
+                    console.log(`We have ${await questions.count()} questions in FAQ page.`)
+                    for (let i=0;i<await questions.count();i++){
+                        
+                        const exspandButton = await questions.nth(i);
+                        const question = await exspandButton.locator("xpath=/parent::button");
+                        console.log(`${await question.innerText()}`);
+                        await hoverAndClick(page,exspandButton);
+                        await page.waitForTimeout(1000);
+                    }
             } catch (error) {
                     console.error(error);
             }
@@ -1801,6 +1819,53 @@ test('Blogs Page',async({page})=>{
                     await scrolltoTop(page);
                     // take screenshot
                     await takeScreenshot(page,"BlogsPage");
+                    // Header checking
+                    const header = await elementCheck(page,"//span[contains(normalize-space(),'Our Latest Posts')]","Header","Blogs");
+                    expect.soft(header).toBeTruthy();
+                    // Checking all blogs
+                    const blogs = await page.locator("//section/div[contains(@class,'postsContainer')]/div[contains(@class,'post')]");
+                    const blogsCount = await blogs.count();
+                    for(let i=0; i<blogsCount;i++){
+                        const  blog = await blogs.nth(i);
+                        const blogImageSrc = await blog.locator("xpath=/div[contains(@class,'Img')]/img").getAttribute("src");
+                        if(blogImageSrc){
+                                console.log(`${i}.Blog image src is: ${blogImageSrc}`)
+                                const blogImage = await imageChecking(page,blogImageSrc,"BlogImage","Community");
+                                expect.soft(blogImage).toBeTruthy();
+                                if(blogImage){
+                                        console.log(`${i}.Blog image displayed`);
+                                }else{console.log(`${i}.Blog image NOT displayed`)};
+                        }else{console.log(`Src is not available for ${i}.Blog`)};
+                        const blogTitle = await blog.locator("xpath=/div[contains(@class,'Content')]/h3").innerText();
+                        if(blogTitle){
+                                console.log(`${i}.Blog title is: ${blogTitle}`);
+                        }else{console.log(`Title is not available for ${i}.blog`)};
+                        const blogPara = await blog.locator("xpath=/div[contains(@class,'Content')]/p[contains(@class,'Para')]").innerText();
+                        if(blogPara){
+                                console.log(`${i}.Blog content is: ${blogPara}`);
+                        }else{console.log(`Content is not available for ${i}.blog`)};
+                        const blogReadMore = await blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']").innerText();
+                        if(blogReadMore){
+                                console.log(`${i}.Blog read more button is: ${blogReadMore}`);
+                                const ReadMoreButton = blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']");
+                                await hoverAndClick(page,ReadMoreButton);
+                                // scrolling to bottom of the page step by step
+                                await scrollToBottom(page,500,500);
+                                // scroll to top of the page
+                                await scrolltoTop(page);
+                                const blogHeader = await page.locator("//h1[contains(@class,'Title')]").innerText();
+                                if(blogHeader.includes(blogTitle)){
+                                        expect.soft(true).toBeTruthy();
+                                        console.log(`${i}.Blog read more button re-diecting to same blog`);
+                                }else{
+                                        expect.soft(false).toBeTruthy();
+                                        console.log(`${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
+                                }
+                                await page.goBack();
+                                await page.waitForTimeout(1000);
+                        }else{console.log(`Read more button is not available for ${i}.blog`)};
+
+                    }
             } catch (error) {
                     console.error(error);
             }
@@ -1811,7 +1876,7 @@ test('Blogs Page',async({page})=>{
 });
 
 // Checking Privacy Policy Page
-test('Privacy Policy Page',async({page})=>{
+test.only('Privacy Policy Page',async({page})=>{
     if(await urlStatus(page)){
             try {
                     const PrivacyPolicyButton = page.locator("xpath=(//a[normalize-space()='Privacy Policy'])[1]");
@@ -1829,6 +1894,18 @@ test('Privacy Policy Page',async({page})=>{
                     await scrolltoTop(page);
                     // take screenshot
                     await takeScreenshot(page,"PrivacyPolicyPage");
+                    // Header checking
+                    const header = await elementCheck(page,"//h1[normalize-space()='Privacy Policy']","Header","Pivacy Policy");
+                    expect.soft(header).toBeTruthy();
+                    // Checkig all policy points
+                    const policyPoints = await page.locator("//section/div/div[contains(@class,'mb-4')]");
+                    console.log(`We have ${await policyPoints.count()} policy points.`);
+                    for(let i=0;i<await policyPoints.count();i++){
+                        const policyPoint = await policyPoints.nth(i);
+                        const policyPointText = await policyPoint.locator("xpath=/h3").innerText();
+                        console.log(`${policyPointText}`);
+                        await policyPoint.hover();
+                    }
             } catch (error) {
                     console.error(error);
             }
