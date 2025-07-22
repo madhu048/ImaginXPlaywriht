@@ -1773,7 +1773,7 @@ test('FAQ Page',async({page})=>{
 });
 
 // Checking contact Us Page
-test('Contact Us Page',async({page})=>{
+test.only('Contact Us Page',async({page})=>{
     if(await urlStatus(page)){
             try {
                     const ContactUsButton = page.locator("xpath=(//a[normalize-space()='Contact Us'])[1]");
@@ -1791,6 +1791,53 @@ test('Contact Us Page',async({page})=>{
                     await scrolltoTop(page);
                     // take screenshot
                     await takeScreenshot(page,"ContactUsPage");
+                    // Header checking
+                    const header = await elementCheck(page,"//h1[normalize-space()='Contact Us']","Header","Contact Us");
+                    expect.soft(header).toBeTruthy();
+                    // First Name field checking
+                    const firstNameField = await elementCheck(page,"//input[@placeholder='First Name*']","FirstNameField","Contact Us");
+                    expect.soft(firstNameField).toBeTruthy();
+                    // Entering Name into First Name Field
+                    await page.locator("//input[@placeholder='First Name*']").fill("Jack");
+                    // Last Name field checking
+                    const lastNameField = await elementCheck(page,"//input[@placeholder='Last Name*']","LastNameField","Contact Us");
+                    expect.soft(lastNameField).toBeTruthy();
+                    // Entering Name into Last Name Field
+                    await page.locator("//input[@placeholder='Last Name*']").fill("Sparrow");
+                    // Country code drop-down checking
+                    const countryCodeDropdown = await elementCheck(page,"//span[contains(@id,'country_code')]","Country Code Drop-down","Contact Us");
+                    expect.soft(countryCodeDropdown).toBeTruthy();
+                    // Selecting country code
+                    await page.locator("//span[contains(@id,'country_code')]").click();
+                    await page.waitForTimeout(1000);
+                    // Filtering country code by typing
+                    await page.locator("//span[contains(@class,'select2-dropdown')]/span[1]/input").fill("91");
+                    await page.waitForTimeout(1000);
+                    const code = await page.locator("//span[contains(@class,'select2-dropdown')]/span[2]/ul/li[1]");
+                    await hoverAndClick(page,code);
+                    await page.waitForTimeout(1000);
+                    // Phone number field checking
+                    const phoneNumberField = await elementCheck(page,"//input[@placeholder='Phone Number *']","PhoneNumberField","Contact Us");
+                    expect.soft(phoneNumberField).toBeTruthy();
+                    // Entering number into number Field
+                    await page.locator("//input[@placeholder='Phone Number *']").fill("1234567890");
+                    // Email field checking
+                    const emailField = await elementCheck(page,"//input[@placeholder='Email*']","EmailField","Contact Us");
+                    expect.soft(emailField).toBeTruthy();
+                    // Entering email into email Field
+                    await page.locator("//input[@placeholder='Email*']").fill("jacksparrow@gmail.com");
+                    // Message field checking
+                    const messageField = await elementCheck(page,"//textarea[@placeholder='Message']","MessageField","Contact Us");
+                    expect.soft(messageField).toBeTruthy();
+                    // Entering message into message Field
+                    await page.locator("//textarea[@placeholder='Message']").fill("Hello Eveyone!! Happy to see you here.....");
+                    // Send Message button checking
+                    const sendMessageButton = await elementCheck(page,"//button[@type='submit']","Send Message Button","Contact Us");
+                    expect.soft(sendMessageButton).toBeTruthy();
+                    await page.locator("//button[@type='submit']").hover();
+                    await page.waitForTimeout(2000);
+
+                    
             } catch (error) {
                     console.error(error);
             }
@@ -1876,7 +1923,7 @@ test('Blogs Page',async({page})=>{
 });
 
 // Checking Privacy Policy Page
-test.only('Privacy Policy Page',async({page})=>{
+test('Privacy Policy Page',async({page})=>{
     if(await urlStatus(page)){
             try {
                     const PrivacyPolicyButton = page.locator("xpath=(//a[normalize-space()='Privacy Policy'])[1]");
