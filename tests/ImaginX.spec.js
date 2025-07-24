@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import { platform } from "os";
 
 // Browser opening for every test
 async function urlStatus(page) {
@@ -893,7 +894,7 @@ test('Edmentor AI Page',async({page})=>{
 
                     }
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Edmentor AI Page test got Skipped.`)
         expect.soft(false).toBeTruthy();
@@ -997,6 +998,10 @@ test('Educational Page',async({page})=>{
                      // 3D container header checking
                      const Interactive3DContainerHeader = await elementCheck(page,"//h2[contains(normalize-space(),'Interactive')]/span[normalize-space()='3D Container']","Interactive3DContainerHeader","Educational");
                      expect.soft(Interactive3DContainerHeader).toBeTruthy();
+                     // Our Recent Posts text checking
+                     const OurRecentPostsText = await elementCheck(page,"//p[normalize-space()='Our Recent Posts']","OurRecentPostsText","Educational");
+                     expect.soft(OurRecentPostsText).toBeTruthy();
+                     await page.locator("//p[normalize-space()='Our Recent Posts']").hover();
 
                      // Iframe interaction
                      const frame = page.frame({url:'https://experience.imaginxavr.com/cessna_wheel/'});
@@ -1015,9 +1020,7 @@ test('Educational Page',async({page})=>{
                      console.log(`Unity Build title is: ${CessnaWheelUnityBuildTitle}`);
                      expect.soft(CessnaWheelUnityBuildTitle.includes('Cessna Wheel')).toBeTruthy();  
 
-                     // Our Recent Posts text checking
-                     const OurRecentPostsText = await elementCheck(page,"//p[normalize-space()='Our Recent Posts']","OurRecentPostsText","Educational");
-                     expect.soft(OurRecentPostsText).toBeTruthy();
+                     
 
                      // View our website button checking
                      const ViewOurWebsiteButton = await elementCheck(page,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Educational");
@@ -1032,7 +1035,7 @@ test('Educational Page',async({page})=>{
                      expect.soft(LoadMorePostsButton).toBeTruthy();
 
                 } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
                 }
         }else{console.log(`❌ Educational Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1147,7 +1150,7 @@ test('Workforce Development Page',async({page})=>{
                      const LoadMorePostsButton = await elementCheck(page,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Workforce");
                      expect.soft(LoadMorePostsButton).toBeTruthy();
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Workforce Development Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1261,7 +1264,7 @@ test('Industrial Page',async({page})=>{
                      const LoadMorePostsButton = await elementCheck(page,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Industrial");
                      expect.soft(LoadMorePostsButton).toBeTruthy();
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Industrial Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1375,7 +1378,7 @@ test('Healthcare Page',async({page})=>{
                      const LoadMorePostsButton = await elementCheck(page,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Healthcare");
                      expect.soft(LoadMorePostsButton).toBeTruthy();
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Healthcare Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1493,7 +1496,7 @@ test('Case Studies Page',async({page})=>{
                     }
                     
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Case Studies Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1687,16 +1690,16 @@ test('Community Page',async({page})=>{
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
                                         console.log(`${i}.Blog image displayed`);
-                                }else{console.log(`${i}.Blog image NOT displayed`)};
-                        }else{console.log(`Src is not available for ${i}.Blog`)};
+                                }else{console.log(`⚠️ ${i}.Blog image NOT displayed`)};
+                        }else{console.log(`⚠️ Src is not available for ${i}.Blog`)};
                         const blogTitle = await blog.locator("xpath=/div[contains(@class,'Content')]/h3").innerText();
                         if(blogTitle){
                                 console.log(`${i}.Blog title is: ${blogTitle}`);
-                        }else{console.log(`Title is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Title is not available for ${i}.blog`)};
                         const blogPara = await blog.locator("xpath=/div[contains(@class,'Content')]/p[contains(@class,'Para')]").innerText();
                         if(blogPara){
                                 console.log(`${i}.Blog content is: ${blogPara}`);
-                        }else{console.log(`Content is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Content is not available for ${i}.blog`)};
                         const blogReadMore = await blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']").innerText();
                         if(blogReadMore){
                                 console.log(`${i}.Blog read more button is: ${blogReadMore}`);
@@ -1708,17 +1711,17 @@ test('Community Page',async({page})=>{
                                         console.log(`${i}.Blog read more button re-diecting to same blog`);
                                 }else{
                                         expect.soft(false).toBeTruthy();
-                                        console.log(`${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
+                                        console.log(`⚠️ ${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
                                 }
                                 await page.goBack();
                                 await page.waitForTimeout(1000);
-                        }else{console.log(`Read more button is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Read more button is not available for ${i}.blog`)};
 
                     }
 
 
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Community Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1764,7 +1767,7 @@ test('FAQ Page',async({page})=>{
                         await page.waitForTimeout(1000);
                     }
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ FAQ Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1830,7 +1833,7 @@ test.only('Contact Us Page',async({page})=>{
                     const messageField = await elementCheck(page,"//textarea[@placeholder='Message']","MessageField","Contact Us");
                     expect.soft(messageField).toBeTruthy();
                     // Entering message into message Field
-                    await page.locator("//textarea[@placeholder='Message']").fill("Hello Eveyone!! Happy to see you here.....");
+                    await page.locator("//textarea[@placeholder='Message']").fill("Hello Everyone!! Happy to see you here.....");
                     // Send Message button checking
                     const sendMessageButton = await elementCheck(page,"//button[@type='submit']","Send Message Button","Contact Us");
                     expect.soft(sendMessageButton).toBeTruthy();
@@ -1839,7 +1842,7 @@ test.only('Contact Us Page',async({page})=>{
 
                     
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Contact Us Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1881,16 +1884,16 @@ test('Blogs Page',async({page})=>{
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
                                         console.log(`${i}.Blog image displayed`);
-                                }else{console.log(`${i}.Blog image NOT displayed`)};
-                        }else{console.log(`Src is not available for ${i}.Blog`)};
+                                }else{console.log(`⚠️ ${i}.Blog image NOT displayed`)};
+                        }else{console.log(`⚠️ Src is not available for ${i}.Blog`)};
                         const blogTitle = await blog.locator("xpath=/div[contains(@class,'Content')]/h3").innerText();
                         if(blogTitle){
                                 console.log(`${i}.Blog title is: ${blogTitle}`);
-                        }else{console.log(`Title is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Title is not available for ${i}.blog`)};
                         const blogPara = await blog.locator("xpath=/div[contains(@class,'Content')]/p[contains(@class,'Para')]").innerText();
                         if(blogPara){
                                 console.log(`${i}.Blog content is: ${blogPara}`);
-                        }else{console.log(`Content is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Content is not available for ${i}.blog`)};
                         const blogReadMore = await blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']").innerText();
                         if(blogReadMore){
                                 console.log(`${i}.Blog read more button is: ${blogReadMore}`);
@@ -1906,15 +1909,15 @@ test('Blogs Page',async({page})=>{
                                         console.log(`${i}.Blog read more button re-diecting to same blog`);
                                 }else{
                                         expect.soft(false).toBeTruthy();
-                                        console.log(`${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
+                                        console.log(`⚠️ ${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
                                 }
                                 await page.goBack();
                                 await page.waitForTimeout(1000);
-                        }else{console.log(`Read more button is not available for ${i}.blog`)};
+                        }else{console.log(`⚠️ Read more button is not available for ${i}.blog`)};
 
                     }
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Blogs Page test got Skipped.`)
             expect.soft(false).toBeTruthy();
@@ -1954,7 +1957,7 @@ test('Privacy Policy Page',async({page})=>{
                         await policyPoint.hover();
                     }
             } catch (error) {
-                    console.error(error);
+                    console.error(`⚠️ ${error}`);
             }
     }else{console.log(`❌ Privacy Policy Page test got Skipped.`)
             expect.soft(false).toBeTruthy();

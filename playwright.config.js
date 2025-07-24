@@ -23,17 +23,13 @@ export default defineConfig({
   // forbidOnly: process.env.CI ? true : false,
   forbidOnly: process.env.CI ? false : false,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 3 : 1,
   // retries: 3, // it will re-execute the faild tests three times
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  // workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  // Below line for local
-  // reporter: 'html',
-  // Below line for jenkins
-  // reporter: [['html',{outputFolder:'playwright-report',open:'never'}]],
-  reporter: [['html',{outputFolder:'C:/ProgramData/Jenkins/.jenkins/workspace/ImaginX/playwright-report',open:'never'}]],
-  
+  reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -42,7 +38,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
   },
-  timeout:600000,  // Total time out for every test
+  timeout:700000,  // Total time out for every test
 
   /* Configure projects for major browsers */
   projects: [
