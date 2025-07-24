@@ -115,7 +115,7 @@ async function elementCheck(page,elementPath,elementName,pageName) {
     try {
             const element = await page.locator(elementPath);
             if(await element.isVisible()){
-                console.log(`${elementName} is displayed on ${pageName} page.`);
+                console.log(`✅ ${elementName} is displayed on ${pageName} page.`);
                 await element.scrollIntoViewIfNeeded();
                 await page.waitForTimeout(500);
                 await element.hover();
@@ -150,7 +150,7 @@ async function imageChecking(page,imgUrl,/*CSSselector,*/imageName,pageName) {
                                     );
                 },imgUrl);
                 if(isImageLoaded){
-                    console.log(`${imageName} image Displayed on ${pageName} page.`);
+                    console.log(`✅ ${imageName} image Displayed on ${pageName} page.`);
                     // await page.locator(CSSselector).screenshot({path:`screenshots/${imageName}_${Date_Time}.png`});
                     return true;
                 }else{
@@ -211,7 +211,7 @@ async function isvideoWithSrcPlaying(page,videoUrl,videoName,pageName,waitingTim
                    
                 },{videoUrl,waitingTime,isBannerVideoChecking});
                 if(isVideoPlaying){
-                    console.log(`${videoName} video is playing fine on ${pageName} page.`);
+                    console.log(`✅ ${videoName} video is playing fine on ${pageName} page.`);
                     // await page.locator(videoCssPath).screenshot({path:`screenshots/${videoName}_${Date_Time}.png`});
                     return true;
                 }else{
@@ -1689,16 +1689,16 @@ test('Community Page',async({page})=>{
                                 const blogImage = await imageChecking(page,blogImageSrc,"BlogImage","Community");
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
-                                        console.log(`${i}.Blog image displayed`);
+                                        console.log(`✅ ${i}.Blog image displayed`);
                                 }else{console.log(`⚠️ ${i}.Blog image NOT displayed`)};
                         }else{console.log(`⚠️ Src is not available for ${i}.Blog`)};
                         const blogTitle = await blog.locator("xpath=/div[contains(@class,'Content')]/h3").innerText();
                         if(blogTitle){
-                                console.log(`${i}.Blog title is: ${blogTitle}`);
+                                console.log(`✅ ${i}.Blog title is: ${blogTitle}`);
                         }else{console.log(`⚠️ Title is not available for ${i}.blog`)};
                         const blogPara = await blog.locator("xpath=/div[contains(@class,'Content')]/p[contains(@class,'Para')]").innerText();
                         if(blogPara){
-                                console.log(`${i}.Blog content is: ${blogPara}`);
+                                console.log(`✅ ${i}.Blog content is: ${blogPara}`);
                         }else{console.log(`⚠️ Content is not available for ${i}.blog`)};
                         const blogReadMore = await blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']").innerText();
                         if(blogReadMore){
@@ -1708,7 +1708,7 @@ test('Community Page',async({page})=>{
                                 const blogHeader = await page.locator("//h1[contains(@class,'Title')]").innerText();
                                 if(blogHeader.includes(blogTitle)){
                                         expect.soft(true).toBeTruthy();
-                                        console.log(`${i}.Blog read more button re-diecting to same blog`);
+                                        console.log(`✅ ${i}.Blog read more button re-diecting to same blog`);
                                 }else{
                                         expect.soft(false).toBeTruthy();
                                         console.log(`⚠️ ${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
@@ -1883,16 +1883,16 @@ test('Blogs Page',async({page})=>{
                                 const blogImage = await imageChecking(page,blogImageSrc,"BlogImage","Community");
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
-                                        console.log(`${i}.Blog image displayed`);
+                                        console.log(`✅ ${i}.Blog image displayed`);
                                 }else{console.log(`⚠️ ${i}.Blog image NOT displayed`)};
                         }else{console.log(`⚠️ Src is not available for ${i}.Blog`)};
                         const blogTitle = await blog.locator("xpath=/div[contains(@class,'Content')]/h3").innerText();
                         if(blogTitle){
-                                console.log(`${i}.Blog title is: ${blogTitle}`);
+                                console.log(`✅ ${i}.Blog title is: ${blogTitle}`);
                         }else{console.log(`⚠️ Title is not available for ${i}.blog`)};
                         const blogPara = await blog.locator("xpath=/div[contains(@class,'Content')]/p[contains(@class,'Para')]").innerText();
                         if(blogPara){
-                                console.log(`${i}.Blog content is: ${blogPara}`);
+                                console.log(`✅ ${i}.Blog content is: ${blogPara}`);
                         }else{console.log(`⚠️ Content is not available for ${i}.blog`)};
                         const blogReadMore = await blog.locator("xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']").innerText();
                         if(blogReadMore){
@@ -1906,7 +1906,7 @@ test('Blogs Page',async({page})=>{
                                 const blogHeader = await page.locator("//h1[contains(@class,'Title')]").innerText();
                                 if(blogHeader.includes(blogTitle)){
                                         expect.soft(true).toBeTruthy();
-                                        console.log(`${i}.Blog read more button re-diecting to same blog`);
+                                        console.log(`✅ ${i}.Blog read more button re-diecting to same blog`);
                                 }else{
                                         expect.soft(false).toBeTruthy();
                                         console.log(`⚠️ ${i}.Blog read more button NOT re-diecting to same blog. Re-directed Blog Header is ${blogHeader}`);
@@ -1953,7 +1953,7 @@ test('Privacy Policy Page',async({page})=>{
                     for(let i=0;i<await policyPoints.count();i++){
                         const policyPoint = await policyPoints.nth(i);
                         const policyPointText = await policyPoint.locator("xpath=/h3").innerText();
-                        console.log(`${policyPointText}`);
+                        console.log(`✅ ${policyPointText}`);
                         await policyPoint.hover();
                     }
             } catch (error) {
