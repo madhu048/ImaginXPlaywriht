@@ -1776,7 +1776,7 @@ test('FAQ Page',async({page})=>{
 });
 
 // Checking contact Us Page
-test.only('Contact Us Page',async({page})=>{
+test('Contact Us Page',async({page})=>{
     if(await urlStatus(page)){
             try {
                     const ContactUsButton = page.locator("xpath=(//a[normalize-space()='Contact Us'])[1]");
