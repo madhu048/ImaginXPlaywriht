@@ -4,7 +4,7 @@ import { platform } from "os";
 // Browser opening for every test
 async function urlStatus(page) {
      try {
-            const response = await page.goto(`https://imaginxavrr.com/`);
+            const response = await page.goto(`https://imaginxavr.com/`);
             
             try {
                     await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
@@ -66,17 +66,12 @@ console.log(`time is : ${Date_Time}`);
  */
 
 // Take screenshot
-async function takeScreenshot(page,name,testInfo) {
+async function takeScreenshot(page,name) {
 
     if(!page.isClosed()){
         try {
 
-                const screenshotPath = `screenshots/${name}_${Date_Time}.png`;
-                await page.screenshot({path:screenshotPath,fullPage:true});
-                // This one will attach the every screenshot manually to the html report from screenshot folder
-                await testInfo.attach(`${name}`,{path:screenshotPath,contentType:'image/png'})
-
-        //     await page.screenshot({ path: `screenshots/${name}_${Date_Time}.png`, fullPage: true });
+            await page.screenshot({ path: `screenshots/${name}_${Date_Time}.png`, fullPage: true });
         } catch (error) {
             console.error('⚠️ Screenshot error : '+error);
         }
@@ -236,7 +231,7 @@ async function isvideoWithSrcPlaying(page,videoUrl,videoName,pageName,waitingTim
 };
 
 // Home page checking
-test.only('Home Page', async({page},testInfo)=>{
+test.only('Home Page', async({page})=>{
     if(await urlStatus(page)){
         // Scroll to bottom
         await scrollToBottom(page,300,500);
@@ -464,7 +459,6 @@ test.only('Home Page', async({page},testInfo)=>{
         await scrolltoTop(page);
        
     }else{console.log(`❌ Home Page test got Failed.`);
-            await takeScreenshot(page,"HomePage",testInfo);
             expect.soft(false).toBeTruthy();
     }; 
 });
