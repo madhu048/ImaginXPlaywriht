@@ -5,6 +5,7 @@ module.exports = async () => {
   const folderPath = 'screenshots';
   const errorscreeshotFolder = 'ErrorScreenshots';
   const playwrightReport = 'playwright-report';
+  const TestResults = 'test-results';
 
   try {
     await fs.emptyDir(folderPath); // Clears all files from screenshots folder
@@ -23,5 +24,11 @@ module.exports = async () => {
     console.log(`🧹 Cleared '${playwrightReport}' folder.`);
   } catch (err) {
     console.error(`❌ Error clearing '${playwrightReport}':`, err);
+  }
+  try {
+    await fs.emptyDir(TestResults); // Clears all files from test-results folder
+    console.log(`🧹 Cleared '${TestResults}' folder.`);
+  } catch (err) {
+    console.error(`❌ Error clearing '${TestResults}':`, err);
   }
 };
