@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import { platform } from "os";
 
 // Browser opening for every test
-async function urlStatus(page) {
+async function urlStatus(page,name) {
      try {
             const response = await page.goto(`https://dev.imaginxavr.com/imaginx/`);
             
@@ -15,6 +15,7 @@ async function urlStatus(page) {
             expect.soft(await page.title()).toEqual(`imaginX - Innovate & Inspire`);
             return true;
     } catch (error) {
+            await takeScreenshot(page,name);
             console.error(`❌ There is issue with Url : ${error}`);
             console.error(`➡️ Error Message: ${error.message}`);
             console.error(`➡️ Error Stack: ${error.stack}`);
@@ -230,8 +231,8 @@ async function isvideoWithSrcPlaying(page,videoUrl,videoName,pageName,waitingTim
 };
 
 // Home page checking
-test('Home Page', async({page})=>{
-    if(await urlStatus(page)){
+test.only('Home Page', async({page})=>{
+    if(await urlStatus(page,"HomePage")){
         // Scroll to bottom
         await scrollToBottom(page,300,500);
         // Scroll to top
