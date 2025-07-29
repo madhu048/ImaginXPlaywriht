@@ -2,9 +2,9 @@ import {test,expect} from "@playwright/test";
 import { platform } from "os";
 
 // Browser opening for every test
-async function urlStatus(page,name) {
+async function urlStatus(page) {
      try {
-            const response = await page.goto(`https://dev.imaginxavr.com/imaginx/`);
+            const response = await page.goto(`https://imaginxavrr.com/`);
             
             try {
                     await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
@@ -15,7 +15,6 @@ async function urlStatus(page,name) {
             expect.soft(await page.title()).toEqual(`imaginX - Innovate & Inspire`);
             return true;
     } catch (error) {
-            await takeScreenshot(page,name);
             console.error(`❌ There is issue with Url : ${error}`);
             console.error(`➡️ Error Message: ${error.message}`);
             console.error(`➡️ Error Stack: ${error.stack}`);
@@ -67,11 +66,17 @@ console.log(`time is : ${Date_Time}`);
  */
 
 // Take screenshot
-async function takeScreenshot(page,name) {
+async function takeScreenshot(page,name,testInfo) {
 
     if(!page.isClosed()){
         try {
-            await page.screenshot({ path: `screenshots/${name}_${Date_Time}.png`, fullPage: true });
+
+                const screenshotPath = `screenshots/${name}_${Date_Time}.png`;
+                await page.screenshot({path:screenshotPath,fullPage:true});
+                // This one will attach the every screenshot manually to the html report from screenshot folder
+                await testInfo.attach(`${name}`,{path:screenshotPath,contentType:'image/png'})
+
+        //     await page.screenshot({ path: `screenshots/${name}_${Date_Time}.png`, fullPage: true });
         } catch (error) {
             console.error('⚠️ Screenshot error : '+error);
         }
@@ -231,8 +236,8 @@ async function isvideoWithSrcPlaying(page,videoUrl,videoName,pageName,waitingTim
 };
 
 // Home page checking
-test.only('Home Page', async({page})=>{
-    if(await urlStatus(page,"HomePage")){
+test.only('Home Page', async({page},testInfo)=>{
+    if(await urlStatus(page)){
         // Scroll to bottom
         await scrollToBottom(page,300,500);
         // Scroll to top
@@ -458,7 +463,8 @@ test.only('Home Page', async({page})=>{
         await page.waitForTimeout(1000);
         await scrolltoTop(page);
        
-    }else{console.log(`❌ Home Page test got Failed.`)
+    }else{console.log(`❌ Home Page test got Failed.`);
+            await takeScreenshot(page,"HomePage",testInfo);
             expect.soft(false).toBeTruthy();
     }; 
 });
