@@ -4,7 +4,8 @@ import { platform } from "os";
 // Browser opening for every test
 async function urlStatus(page) {
      try {
-            const response = await page.goto(`https://imaginxavr.com/`);
+            const response = await page.goto(`https://dev.imaginxavr.com/imaginx/`);
+            
             try {
                     await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
             } catch (e) {
@@ -15,6 +16,8 @@ async function urlStatus(page) {
             return true;
     } catch (error) {
             console.error(`❌ There is issue with Url : ${error}`);
+            console.error(`➡️ Error Message: ${error.message}`);
+            console.error(`➡️ Error Stack: ${error.stack}`);
             expect.soft(true).toBeTruthy();
             return false;
     }
@@ -454,7 +457,7 @@ test('Home Page', async({page})=>{
         await page.waitForTimeout(1000);
         await scrolltoTop(page);
        
-    }else{console.log(`❌ Home Page test got Skipped.`)
+    }else{console.log(`❌ Home Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 });
@@ -744,7 +747,7 @@ test('IXGenie Page',async({page})=>{
             } catch (error) {
                     console.error(error);
             }
-    }else{console.log(`❌ IXGenie Page test got Skipped.`)
+    }else{console.log(`❌ IXGenie Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 });
@@ -896,7 +899,7 @@ test('Edmentor AI Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Edmentor AI Page test got Skipped.`)
+    }else{console.log(`❌ Edmentor AI Page test got Failed.`)
         expect.soft(false).toBeTruthy();
     }; 
 
@@ -1037,7 +1040,7 @@ test('Educational Page',async({page})=>{
                 } catch (error) {
                     console.error(`⚠️ ${error}`);
                 }
-        }else{console.log(`❌ Educational Page test got Skipped.`)
+        }else{console.log(`❌ Educational Page test got Failed.`)
             expect.soft(false).toBeTruthy();
         }; 
 
@@ -1152,7 +1155,7 @@ test('Workforce Development Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Workforce Development Page test got Skipped.`)
+    }else{console.log(`❌ Workforce Development Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1266,7 +1269,7 @@ test('Industrial Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Industrial Page test got Skipped.`)
+    }else{console.log(`❌ Industrial Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1380,7 +1383,7 @@ test('Healthcare Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Healthcare Page test got Skipped.`)
+    }else{console.log(`❌ Healthcare Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1498,7 +1501,7 @@ test('Case Studies Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Case Studies Page test got Skipped.`)
+    }else{console.log(`❌ Case Studies Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1723,7 +1726,7 @@ test('Community Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Community Page test got Skipped.`)
+    }else{console.log(`❌ Community Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1769,7 +1772,7 @@ test('FAQ Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ FAQ Page test got Skipped.`)
+    }else{console.log(`❌ FAQ Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1844,7 +1847,7 @@ test('Contact Us Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Contact Us Page test got Skipped.`)
+    }else{console.log(`❌ Contact Us Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1919,7 +1922,7 @@ test('Blogs Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Blogs Page test got Skipped.`)
+    }else{console.log(`❌ Blogs Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
@@ -1959,7 +1962,7 @@ test('Privacy Policy Page',async({page})=>{
             } catch (error) {
                     console.error(`⚠️ ${error}`);
             }
-    }else{console.log(`❌ Privacy Policy Page test got Skipped.`)
+    }else{console.log(`❌ Privacy Policy Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 
