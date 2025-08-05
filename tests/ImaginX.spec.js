@@ -1987,10 +1987,10 @@ test('Blogs Page',async({page},testInfo)=>{
                                 const res0 = await hoverWithXpath(blog,"xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']");
                                 expect.soft(res0).toBeTruthy();
                                 await page.waitForTimeout(1000);
-                                const res00 = await clickWithXpath(blog,"xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']");
-                                expect.soft(res00).toBeTruthy();
+                                const res56 = await clickWithXpath(blog,"xpath=/div[contains(@class,'Content')]/a[normalize-space()='Read More']");
+                                expect.soft(res56).toBeTruthy();
                                 await page.waitForTimeout(1000);
-                                if(res00){
+                                if(res56){
                                         // scrolling to bottom of the page step by step
                                         await scrollToBottom(page,500,500);
                                         // scroll to top of the page
