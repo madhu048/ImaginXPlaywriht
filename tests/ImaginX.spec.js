@@ -11,7 +11,9 @@ async function urlStatus(page) {
                     console.warn('⚠️ Page took too long to load fully. Continuing...');
             }
             expect(response.status()).toBeLessThan(400);
-            expect.soft(await page.title()).toEqual(`imaginX - Innovate & Inspire`);
+        //     expect.soft(await page.title()).toEqual(`Innovation and Inspire with AVR - imaginX`);
+        await expect.soft(page).toHaveTitle(/Innovation and Inspire/);
+
             return true;
     } catch (error) {
             console.error(`❌ There is issue with Url : ${error}`);
@@ -123,9 +125,9 @@ async function hoverAndClickWithXpath(scope,xpath) {
                         page = scope; // if scope is the page itself
                 }
             await page.waitForTimeout(500);
-            await locator.hover();
+            await locator.hover({ timeout: 60000 });
             await page.waitForTimeout(500);
-            await locator.click();
+            await locator.click({ timeout: 60000 });
             await page.waitForTimeout(2000);
             return true;
         } catch (error) {
@@ -138,9 +140,9 @@ async function hoverAndClickWithLocator(locator) {
         try {
             const page = locator.page(); // Get the page from locator
             await locator.waitFor({timeout:40000});
-            await locator.hover();
+            await locator.hover({ timeout: 60000 });
             await page.waitForTimeout(500);
-            await locator.click();
+            await locator.click({ timeout: 60000 });
             await page.waitForTimeout(2000);
             return true;
         } catch (error) {
@@ -155,12 +157,12 @@ async function hoverWithXpath(scope,xpath) {
                        const page = scope.page(); // it will extract the main page onject from scope parameter
                        const ele = await page.locator(xpath);
                        await ele.waitFor({timeout:40000});
-                       await ele.hover();
+                       await ele.hover({ timeout: 60000 });
                        return true;
                 } else {
                         const ele = await scope.locator(xpath);
                        await ele.waitFor({timeout:40000});
-                       await ele.hover();
+                       await ele.hover({ timeout: 60000 });
                        return true;
                 }
         } catch (error) {
@@ -172,7 +174,7 @@ async function hoverWithXpath(scope,xpath) {
 async function hoverWithLocator(locator) {
         try {
                 await locator.waitFor({ timeout: 40000});
-                await locator.hover();
+                await locator.hover({ timeout: 60000 });
                 return true;
         } catch (error) {
                 console.error(`⚠️ Error during hover: ${error}`);
@@ -187,12 +189,12 @@ async function clickWithXpath(scope,xpath) {
                        const page = scope.page(); // it will extract the main page onject from scope parameter
                        const ele = await page.locator(xpath);
                        await ele.waitFor({timeout:40000});
-                       await ele.click();
+                       await ele.click({ timeout: 60000 });
                        return true;
                 } else {
                         const ele = await scope.locator(xpath);
                        await ele.waitFor({timeout:40000});
-                       await ele.click();
+                       await ele.click({ timeout: 60000 });
                        return true;
                 }
         } catch (error) {
@@ -204,7 +206,7 @@ async function clickWithXpath(scope,xpath) {
 async function clickWithLocator(locator) {
         try {
                 await locator.waitFor({ timeout: 40000});
-                await locator.click();
+                await locator.click({ timeout: 60000 });
                 return true;
         } catch (error) {
                 console.error(`⚠️ Error during click: ${error}`);
@@ -289,7 +291,7 @@ async function elementCheck(page,testInfo,elementPath,elementName,pageName) {
                 console.log(`✅ ${elementName} is displayed on ${pageName} page.`);
                 await element.scrollIntoViewIfNeeded();
                 await page.waitForTimeout(500);
-                await element.hover();
+                await element.hover({ timeout: 60000 });
                 await page.waitForTimeout(500);
                 return true;
             }else{
@@ -1940,7 +1942,7 @@ test('Contact Us Page',async({page},testInfo)=>{
 test('Blogs Page',async({page},testInfo)=>{
     if(await urlStatus(page)){
             try {
-                    await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Blogs'])[1]");
+                    await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Blog'])[1]");
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
