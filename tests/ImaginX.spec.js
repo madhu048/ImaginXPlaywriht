@@ -1,4 +1,5 @@
 import {test,expect} from "@playwright/test";
+import { error } from "console";
 
 // Browser opening for every test
 async function urlStatus(page) {
@@ -8,11 +9,11 @@ async function urlStatus(page) {
             try {
                     await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
             } catch (e) {
-                    console.warn('⚠️ Page took too long to load fully. Continuing...');
+                    throw new error('❌ ImaginX Url did not load within 90s.');
             }
             expect(response.status()).toBeLessThan(400);
-        //     expect.soft(await page.title()).toEqual(`Innovation and Inspire with AVR - imaginX`);
-        await expect.soft(page).toHaveTitle(/Innovation and Inspire/);
+            expect.soft(await page.title()).toEqual(`Experience Innovation and Inspiration with AVR - imaginX`);
+        // await expect.soft(page).toHaveTitle(/Innovation and Inspire/);
 
             return true;
     } catch (error) {
@@ -124,9 +125,9 @@ async function hoverAndClickWithXpath(scope,xpath) {
                 } else {
                         page = scope; // if scope is the page itself
                 }
-            await page.waitForTimeout(500);
+            await page.waitForTimeout(1000);
             await locator.hover({ timeout: 60000 });
-            await page.waitForTimeout(500);
+            await page.waitForTimeout(1000);
             await locator.click({ timeout: 60000 });
             await page.waitForTimeout(2000);
             return true;
@@ -141,7 +142,7 @@ async function hoverAndClickWithLocator(locator) {
             const page = locator.page(); // Get the page from locator
             await locator.waitFor({timeout:40000});
             await locator.hover({ timeout: 60000 });
-            await page.waitForTimeout(500);
+            await page.waitForTimeout(1000);
             await locator.click({ timeout: 60000 });
             await page.waitForTimeout(2000);
             return true;
@@ -154,7 +155,7 @@ async function hoverAndClickWithLocator(locator) {
 async function hoverWithXpath(scope,xpath) {
         try {
                 if ('page' in scope && typeof scope.page() === 'function') { // if scope parameter contains page and scope.page must not be a function then it will return true
-                       const page = scope.page(); // it will extract the main page onject from scope parameter
+                       const page = scope.page(); // it will extract the main page object from scope parameter
                        const ele = await page.locator(xpath);
                        await ele.waitFor({timeout:40000});
                        await ele.hover({ timeout: 60000 });
@@ -346,7 +347,7 @@ async function imageChecking(page,testInfo,imgUrl,imageName,pageName) {
  * @param {boolean} isBannerVideoChecking - For banner video checking the value is "true", for normal video checking the value is "false".
  */
 // Banner video checking
-async function isvideoWithSrcPlaying(page,testInfo,videoUrl,videoName,pageName,waitingTime=5000,isBannerVideoChecking=false) {
+async function isvideoWithSrcPlaying(page,testInfo,videoUrl,videoName,pageName,waitingTime=10000,isBannerVideoChecking=false) {
         try {  
                 const isVideoPlaying = await page.evaluate(async({videoUrl,waitingTime,isBannerVideoChecking})=>{
                     let mactchedVideo = null;
@@ -438,7 +439,7 @@ test('Home Page', async({page},testInfo)=>{
         // if(!result){await takeScreenshotEle(page,"img[alt='logo']","Logo")}
         expect.soft(result).toBeTruthy();
         // Banner video checking
-        const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/assets/vids/-e753-4fb1-8ee7-af0035d9f693.mp4","BannerVideo","Home",5000,true);
+        const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/assets/vids/-e753-4fb1-8ee7-af0035d9f693.mp4","BannerVideo","Home",10000,true);
         // if(!videoRes){await takeScreenshotEle(page,"//video","BannerVideo")};
         expect.soft(videoRes).toBeTruthy();
         // header checking
@@ -633,7 +634,7 @@ test('IXGenie Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ IXGenie Page took too long to load fully. Continuing...');
+                           throw new error('❌ IXGenie Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -643,7 +644,7 @@ test('IXGenie Page',async({page},testInfo)=>{
                     // take screenshot
                     await takeScreenshot(page,"IXGeniePage");
                     // Banner video checking
-                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/assets/imgs/ixgenie.mp4","IXgeniePageBannerVideo","IXgenie",5000,true);
+                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/assets/imgs/ixgenie.mp4","IXgeniePageBannerVideo","IXgenie",10000,true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
                     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'iXGenie the Ultimate Training & Learning Platform')])[1]",175.0625,484,"Header","IXGenie");
@@ -766,82 +767,36 @@ test('IXGenie Page',async({page},testInfo)=>{
                     // Case studies header checking
                     const caseStudeisText = await elementCheck(page,testInfo,"//h1/span[normalize-space()='Studies']","CaseStudiesHeader","IXgenie");
                     expect.soft(caseStudeisText).toBeTruthy();
-                    // Video1 checking
-                    // Asset Management Process video thumbnail checking
-                    const assetManagementProcessVideoThumbnail = await imageChecking(page,testInfo,"https://www.imaginxavr.com/uploads/videos/asset-management-process17455083702547191745508370.jpg","assetManagementProcessVideoThumbnail","IXgenie");
-                    expect.soft(assetManagementProcessVideoThumbnail).toBeTruthy();
-                    if(assetManagementProcessVideoThumbnail){
-                        const res8 =  await hoverAndClickWithXpath(page,"//img[@src='https://www.imaginxavr.com/uploads/videos/asset-management-process17455083702547191745508370.jpg']");
-                        expect.soft(res8).toBeTruthy();
-                        // video pop-up checking
-                        const assetManagementProcessVideoPopUp = await elementCheck(page,testInfo,"//div[@class='grtvideo-popup-content']","assetManagementProcessVideoPopUp","IXgenie");
-                        expect.soft(assetManagementProcessVideoPopUp).toBeTruthy();
-                        await page.waitForTimeout(2000);
-                        if(assetManagementProcessVideoPopUp){
-                            // it will check the video is playing or not
-                            const assetManagementProcessVideo = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/videos/asset-management-process17466245198830021746624519.mp4","assetManagementProcessVideo","IXgenie",10000,false);
-                            expect.soft(assetManagementProcessVideo).toBeTruthy();
-                            const res7 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
-                            expect.soft(res7).toBeTruthy();
+
+                        const videos = await page.locator("//div[contains(@class,'postsContainer grid')]/div[contains(@class,'post')]");
+                        const videosCount = await videos.count();
+                        console.log(`No.of videos in IXGenie page is ${videosCount}`);
+                        for(let i=0;i<videosCount;i++){
+                                const videoo = await videos.nth(i);
+                                const videoName = await getInnerTextWithXpath(videoo,"xpath=/a/div[2]/h2");
+                                console.log(`${i+1}. Video Name: ${videoName}`);
+                                const videoThumbnailsrc = await getAttributeWithXpath(videoo,"xpath=/a/div[1]/img","src");
+                                console.log(`${i+1}. Video Thumbnail Src: ${videoThumbnailsrc}`);
+                                const VideoThumbnailCheck = await imageChecking(page,testInfo,videoThumbnailsrc,videoName,"IXgenie");
+                                expect.soft(VideoThumbnailCheck).toBeTruthy();
+                                const videoResult = await hoverAndClickWithLocator(videoo);
+                                expect.soft(videoResult).toBeTruthy();
+                                 if(videoResult){
+                                        // video pop-up checking
+                                        const VideoPopUp = await elementCheck(page,testInfo,"//div[@class='grtvideo-popup-content']",videoName,"IXgenie");
+                                        expect.soft(VideoPopUp).toBeTruthy();
+                                        await page.waitForTimeout(2000);
+                                        if(VideoPopUp){
+                                                const videoSrc = await getAttributeWithXpath(page,"//div[@class='grtvideo-popup-content']/video/source","src");
+                                                console.log(`${videoName} src : ${videoSrc}`);
+                                                const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"IXgenie",20000,false);
+                                                expect.soft(videoResult).toBeTruthy();
+                                                const res6 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
+                                                expect.soft(res6).toBeTruthy();
+                                                await page.waitForTimeout(2000);
+                                        }
+                                }
                         }
-                    }
-                    // Video2 checking
-                    // Machine Installation with AI video thumbnail checking
-                    const MachineInstallationWithAIVideoThumbnail = await imageChecking(page,testInfo,"https://www.imaginxavr.com/uploads/videos/filtrex-with-ai17455871506053571745587150.png","MachineInstallationWithAIVideoThumbnail","IXgenie");
-                    expect.soft(MachineInstallationWithAIVideoThumbnail).toBeTruthy();
-                    if(MachineInstallationWithAIVideoThumbnail){
-                        const res6 = await hoverAndClickWithXpath(page,"//img[@src='https://www.imaginxavr.com/uploads/videos/filtrex-with-ai17455871506053571745587150.png']");
-                        expect.soft(res6).toBeTruthy();
-                        // video pop-up checking
-                        const MachineInstallationWithAIVideoPopUp = await elementCheck(page,testInfo,"//div[@class='grtvideo-popup-content']","MachineInstallationWithAIVideoPopUp","IXgenie");
-                        expect.soft(MachineInstallationWithAIVideoPopUp).toBeTruthy();
-                        await page.waitForTimeout(2000);
-                        if(MachineInstallationWithAIVideoPopUp){
-                            // it will check the video is playing or not
-                            const MachineInstallationWithAIVideo = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/videos/filtrex-with-ai17455870359219241745587035.mp4","MachineInstallationWithAIVideo","IXgenie",10000,false);
-                            expect.soft(MachineInstallationWithAIVideo).toBeTruthy();
-                            const res5 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
-                            expect.soft(res5).toBeTruthy();
-                        }
-                    }
-                    // Video3 checking
-                    // College - Virtual tour video thumbnail checking
-                    const CollegeVirtualTourVideoThumbnail = await imageChecking(page,testInfo,"https://www.imaginxavr.com/uploads/videos/college--virtual-tour-17466237137678411746623713.jpg","CollegeVirtualTourVideoThumbnail","IXgenie");
-                    expect.soft(CollegeVirtualTourVideoThumbnail).toBeTruthy();
-                    if(CollegeVirtualTourVideoThumbnail){
-                        const res4 = await hoverAndClickWithXpath(page,"//img[@src='https://www.imaginxavr.com/uploads/videos/college--virtual-tour-17466237137678411746623713.jpg']");
-                        expect.soft(res4).toBeTruthy();
-                        // video pop-up checking
-                        const CollegeVirtualTourVideoPopUp = await elementCheck(page,testInfo,"//div[@class='grtvideo-popup-content']","CollegeVirtualTourVideoPopUp","IXgenie");
-                        expect.soft(CollegeVirtualTourVideoPopUp).toBeTruthy();
-                        await page.waitForTimeout(2000);
-                        if(CollegeVirtualTourVideoPopUp){
-                            // it will check the video is playing or not
-                            const CollegeVirtualTourVideo = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/videos/college--virtual-tour-17466236458159011746623645.mp4","CollegeVirtualTourVideo","IXgenie",10000,false);
-                            expect.soft(CollegeVirtualTourVideo).toBeTruthy();
-                            const res3 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
-                            expect.soft(res3).toBeTruthy();
-                        }
-                    }
-                    // Video4 checking
-                    // Human Anatomy video thumbnail checking
-                    const HumanAnatomyVideoThumbnail = await imageChecking(page,testInfo,"https://www.imaginxavr.com/uploads/videos/human-anatomy17466411323603661746641132.jpg","HumanAnatomyVideoThumbnail","IXgenie");
-                    expect.soft(HumanAnatomyVideoThumbnail).toBeTruthy();
-                    if(HumanAnatomyVideoThumbnail){
-                        const res2 = await hoverAndClickWithXpath(page,"//img[@src='https://www.imaginxavr.com/uploads/videos/human-anatomy17466411323603661746641132.jpg']");
-                        expect.soft(res2).toBeTruthy();
-                        // video pop-up checking
-                        const HumanAnatomyVideoPopUp = await elementCheck(page,testInfo,"//div[@class='grtvideo-popup-content']","HumanAnatomyVideoPopUp","IXgenie");
-                        expect.soft(HumanAnatomyVideoPopUp).toBeTruthy();
-                        await page.waitForTimeout(2000);
-                        if(HumanAnatomyVideoPopUp){
-                            // it will check the video is playing or not
-                            const HumanAnatomyVideo = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/videos/human-anatomy17466411329077561746641132.mp4","HumanAnatomyVideo","IXgenie",10000,false);
-                            expect.soft(HumanAnatomyVideo).toBeTruthy();
-                            const res1 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
-                            expect.soft(res1).toBeTruthy();
-                        }
-                    }
                     // Checking the view more button
                     const ViewMoreButton = await elementCheck(page,testInfo,"//a[normalize-space()='View More']","ViewMoreButton","IXgenie");
                     expect.soft(ViewMoreButton).toBeTruthy();
@@ -878,7 +833,7 @@ test('EdMentor AI Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Edmentor AI Page took too long to load fully. Continuing...');
+                            throw new error('❌ EdMentor AI Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1009,7 +964,7 @@ test('Educational Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Educational Page took too long to load fully. Continuing...');
+                            throw new error('❌ Educational Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1019,7 +974,7 @@ test('Educational Page',async({page},testInfo)=>{
                     // take screenshot
                     await takeScreenshot(page,"EducationalPage");
                     // Banner video checking
-                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/educational.mp4","EducationalPageBannerVideo","Educational",5000,true);
+                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/educational.mp4","EducationalPageBannerVideo","Educational",10000,true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
                     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Immersive Learning ')])[1]",487.515625,266,"Header","Educational");
@@ -1141,7 +1096,7 @@ test('Workforce Development Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Workforce Development Page took too long to load fully. Continuing...');
+                            throw new error('❌ WorkForce Development Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1151,7 +1106,7 @@ test('Workforce Development Page',async({page},testInfo)=>{
                     // take screenshot
                     await takeScreenshot(page,"WorkforceDevelopmentPage");
                     // Banner video checking
-                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/workforce.mp4","WorkforcePageBannerVideo","Workforce",5000,true);
+                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/workforce.mp4","WorkforcePageBannerVideo","Workforce",10000,true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
                     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Workforce Development ')])[1]",414.0625,266,"Header","Workforce Development");
@@ -1249,7 +1204,7 @@ test('Industrial Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Industrial Page took too long to load fully. Continuing...');
+                            throw new error('❌ Industrial Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1259,7 +1214,7 @@ test('Industrial Page',async({page},testInfo)=>{
                     // take screenshot
                     await takeScreenshot(page,"IndustrialPage");
                     // Banner video checking
-                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/industrial.mp4","IndustrialPageBannerVideo","Industrial",5000,true);
+                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/industrial.mp4","IndustrialPageBannerVideo","Industrial",10000,true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
                     const headerCoRes =  await elementCoordinates(page,"(//h1[contains(normalize-space(),'Industrial Training')])[1]",514.765625,266,"Header","Industrial");
@@ -1357,7 +1312,7 @@ test('Healthcare Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Healthcare Page took too long to load fully. Continuing...');
+                            throw new error('❌ Health Care Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1367,7 +1322,7 @@ test('Healthcare Page',async({page},testInfo)=>{
                     // take screenshot
                     await takeScreenshot(page,"HealthcarePage");
                     // Banner video checking
-                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/healthcare.mp4","HealthcarePageBannerVideo","Healthcare",5000,true);
+                    const videoRes = await isvideoWithSrcPlaying(page,testInfo,"https://www.imaginxavr.com/uploads/solutions/healthcare.mp4","HealthcarePageBannerVideo","Healthcare",10000,true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
                     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Healthcare Training')])[1]",489.53125,266,"Header","Healthcare");
@@ -1473,7 +1428,7 @@ test('Case Studies Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Case Studies Page took too long to load fully. Continuing...');
+                            throw new error('❌ Case Studies Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1504,10 +1459,11 @@ test('Case Studies Page',async({page},testInfo)=>{
                         if(res7){
                                 const videoSrc = await getAttributeWithXpath(page,"//video/source","src");
                                 console.log(`${videoName} src : ${videoSrc}`);
-                                const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",10000,false);
+                                const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",20000,false);
                                 expect.soft(videoResult).toBeTruthy();
                                 const res6 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
                                 expect.soft(res6).toBeTruthy();
+                                await page.waitForTimeout(2000);
                         }
                     }
                     // Industrial Training button checking
@@ -1516,7 +1472,7 @@ test('Case Studies Page',async({page},testInfo)=>{
                     if(industrialTraingButton){
                         const res5 = await hoverAndClickWithXpath(page,"//button[normalize-space()='Industrial Training']");
                         expect.soft(res5).toBeTruthy();
-                        await page.waitForTimeout(2000);
+                        await page.waitForTimeout(10000);
                         // Industrial Training videos checking
                         const IndustrialTrainingVideos= page.locator("//div[@id='tab_2']/div/div[contains(@class,'post')]");
                         const IndustrialTrainingVideosCount = await IndustrialTrainingVideos.count();
@@ -1534,10 +1490,11 @@ test('Case Studies Page',async({page},testInfo)=>{
                                 if(res4){
                                         const videoSrc = await getAttributeWithXpath(page,"//video/source","src");
                                         console.log(`${videoName} src : ${videoSrc}`);
-                                        const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",10000,false);
+                                        const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",20000,false);
                                         expect.soft(videoResult).toBeTruthy();
                                         const res2 = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
                                         expect.soft(res2).toBeTruthy();
+                                        await page.waitForTimeout(2000);
                                 }  
                         }
                     }
@@ -1547,7 +1504,7 @@ test('Case Studies Page',async({page},testInfo)=>{
                     if(VirtualTourButton){
                         const res1 = await hoverAndClickWithXpath(page,"//button[normalize-space()='Virtual Tour']");
                         expect.soft(res1).toBeTruthy();
-                        await page.waitForTimeout(2000);
+                        await page.waitForTimeout(5000);
                         // Virtual Tour videos checking
                         const VirtualTourVideos= page.locator("//div[@id='tab_3']/div/div[contains(@class,'post')]");
                         const VirtualTourVideosCount = await VirtualTourVideos.count();
@@ -1565,10 +1522,11 @@ test('Case Studies Page',async({page},testInfo)=>{
                                 if(hoverClickLocatorRes){
                                         const videoSrc = await getAttributeWithXpath(page,"//video/source","src");
                                         console.log(`${videoName} src : ${videoSrc}`);
-                                        const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",10000,false);
+                                        const videoResult = await isvideoWithSrcPlaying(page,testInfo,videoSrc,videoName,"CaseStudies",20000,false);
                                         expect.soft(videoResult).toBeTruthy();
                                         const res = await hoverAndClickWithXpath(page,"//div[@class='grtvideo-popup-content']/span[@class='grtvideo-popup-close']");
                                         expect.soft(res).toBeTruthy();
+                                        await page.waitForTimeout(2000);
                                 }   
                         }
                     }  
@@ -1589,7 +1547,7 @@ test('Community Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Community Page took too long to load fully. Continuing...');
+                            throw new error('❌ Community Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1816,7 +1774,7 @@ test('FAQ Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ FAQ Page took too long to load fully. Continuing...');
+                            throw new error('❌ FAQ Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1860,7 +1818,7 @@ test('Contact Us Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Contact Us Page took too long to load fully. Continuing...');
+                            throw new error('❌ Contact Us Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -1946,7 +1904,7 @@ test('Blogs Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Blogs Page took too long to load fully. Continuing...');
+                            throw new error('❌ Blogs Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -2026,7 +1984,7 @@ test('Privacy Policy Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            console.warn('⚠️ Privacy Policy Page took too long to load fully. Continuing...');
+                            throw new error('❌ Privacy Policy Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step

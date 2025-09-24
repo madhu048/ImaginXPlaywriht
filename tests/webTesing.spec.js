@@ -159,9 +159,10 @@ async function urlStatus(page,url){
     try {
         const response = await page.goto(url);
         try {
-                    await page.waitForLoadState('load', { timeout: 20000 }); // try for 20s
+                    await page.waitForLoadState('load', { timeout: 30000 }); // try for 30s
             } catch (e) {
-                    console.warn(`⚠️ ${url} took too long to load fully. Continuing...`);
+                    console.error(`⚠️ ${url} got skipped becoz its taking long time(Morethan 30 sec) to load.`);
+                    return false;
             }
         await page.waitForTimeout(2000);
         let statusCode = await response.status();
