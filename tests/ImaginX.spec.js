@@ -641,7 +641,7 @@ test('Home Page', async({page,request},testInfo)=>{
     }; 
 });
 // Checking Ixgenie Page
-test.only('IXGenie Page',async({page,request},testInfo)=>{
+test('IXGenie Page',async({page,request},testInfo)=>{
     if(await urlStatus(page)){
         try {
                     const res13 = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='iXGenie'])[1]");
