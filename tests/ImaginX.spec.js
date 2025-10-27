@@ -790,45 +790,51 @@ test('IXGenie Page',async({page,request},testInfo)=>{
                         const videos = await page.locator("//div[contains(@class,'postsContainer grid')]/div[contains(@class,'post')]");
                         const videosCount = await videos.count();
                         console.log(`No.of videos in IXGenie page is ${videosCount}`);
-                        for(let i=0;i<videosCount;i++){
-                                const videoo = await videos.nth(i);
-                                const videoName = await getInnerTextWithXpath(videoo,"xpath=/a/div[2]/h2");
-                                console.log(`${i+1}. Video Name: ${videoName}`);
-                                const videoThumbnailsrc = await getAttributeWithXpath(videoo,"xpath=/a/div[1]/img","src");
-                                console.log(`${i+1}. Video Thumbnail Src: ${videoThumbnailsrc}`);
-                                const VideoThumbnailCheck = await imageChecking(page,testInfo,videoThumbnailsrc,videoName,"IXgenie");
-                                expect.soft(VideoThumbnailCheck).toBeTruthy();
-                                const videoResult = await hoverAndClickWithLocator(videoo);
-                                expect.soft(videoResult).toBeTruthy();
-                                 if(videoResult){
-                                        // Checking case-studies page open state
-                                        const caseStudiesPage = await elementCheck(page,testInfo,"(//section[contains(@class,'latestPosts')]/div)[1]/h1/span[normalize-space('Studies')]","caseStudiesHeader","Case-Studies");
-                                        expect.soft(caseStudiesPage).toBeTruthy();
-                                        // video pop-up checking
-                                        const VideoPopUp = await elementCheck(page,testInfo,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/div",videoName,"IXgenie");
-                                        expect.soft(VideoPopUp).toBeTruthy();
-                                        await page.waitForTimeout(2000);
-                                        if(VideoPopUp&&caseStudiesPage){
-                                                // video header checking
-                                                const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
-                                                if(videoText.includes(videoName)){
-                                                        console.log(`✅ Video header is matched with selected video`);
-                                                }else{
-                                                        console.log(`⚠️ Video header is not matching with selected video`);
-                                                        console.log(`⚠️ Video header is: ${videoText}`);
-                                                        expect.soft(false).toBeTruthy();
-                                                }
-                                                const videoSrc = await getAttributeWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/div/video","src");
-                                                console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
-                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                                // expect.soft(videoResult).toBeTruthy(); 
-                                                await page.goBack();
-                                                await page.waitForLoadState("load");
+                        if(videosCount != 0){
+                                for(let i=0;i<videosCount;i++){
+                                        const videoo = await videos.nth(i);
+                                        const videoName = await getInnerTextWithXpath(videoo,"xpath=/a/div[2]/h2");
+                                        console.log(`${i+1}. Video Name: ${videoName}`);
+                                        const videoThumbnailsrc = await getAttributeWithXpath(videoo,"xpath=/a/div[1]/img","src");
+                                        console.log(`${i+1}. Video Thumbnail Src: ${videoThumbnailsrc}`);
+                                        const VideoThumbnailCheck = await imageChecking(page,testInfo,videoThumbnailsrc,videoName,"IXgenie");
+                                        expect.soft(VideoThumbnailCheck).toBeTruthy();
+                                        const videoResult = await hoverAndClickWithLocator(videoo);
+                                        expect.soft(videoResult).toBeTruthy();
+                                        if(videoResult){
+                                                // Checking case-studies page open state
+                                                const caseStudiesPage = await elementCheck(page,testInfo,"(//section[contains(@class,'latestPosts')]/div)[1]/h1/span[normalize-space('Studies')]","caseStudiesHeader","Case-Studies");
+                                                expect.soft(caseStudiesPage).toBeTruthy();
+                                                // video pop-up checking
+                                                const VideoPopUp = await elementCheck(page,testInfo,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/div",videoName,"IXgenie");
+                                                expect.soft(VideoPopUp).toBeTruthy();
                                                 await page.waitForTimeout(2000);
+                                                if(VideoPopUp&&caseStudiesPage){
+                                                        // video header checking
+                                                        const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
+                                                        if(videoText.includes(videoName)){
+                                                                console.log(`✅ Video header is matched with selected video`);
+                                                        }else{
+                                                                console.log(`⚠️ Video header is not matching with selected video`);
+                                                                console.log(`⚠️ Video header is: ${videoText}`);
+                                                                expect.soft(false).toBeTruthy();
+                                                        }
+                                                        const videoSrc = await getAttributeWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/div/video","src");
+                                                        console.log(`✅ ${videoName} src : ${videoSrc}`);
+                                                        const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
+                                                        // We are not validating the video result because most of time it is failing the scripts due to low network issue.
+                                                        // expect.soft(videoResult).toBeTruthy(); 
+                                                        await page.goBack();
+                                                        await page.waitForLoadState("load");
+                                                        await page.waitForTimeout(2000);
+                                                }
                                         }
                                 }
+                        }else{
+                                console.error(`❌ NO videos found in IXgenie page.`)
+                                expect.soft(false).toBeTruthy();
                         }
+                        
                     // Checking the view more button
                     const ViewMoreButton = await elementCheck(page,testInfo,"//a[normalize-space()='View More']","ViewMoreButton","IXgenie");
                     expect.soft(ViewMoreButton).toBeTruthy();
@@ -1461,148 +1467,164 @@ test('Healthcare Page',async({page,request},testInfo)=>{
     }; 
 });
 // Checking Case Studies Page
-test('Case Studies Page',async({page,request},testInfo)=>{
+test.only('Case Studies Page',async({page,request},testInfo)=>{
     if(await urlStatus(page)){
             try {
                     const res11 = await hoverWithXpath(page,"xpath=(//a[normalize-space()='Solutions'])[1]");
                     expect.soft(res11,'❌ Case Studies link click failed').toBeTruthy();
                     if(res11){
-                    const res8 = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Case Studies'])[1]");
-                    expect.soft(res8).toBeTruthy();
-                    try {
-                            await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
-                    } catch (e) {
-                            throw new error('❌ Case Studies Page did not load within 90s.');
-                    }
-                    await page.waitForTimeout(2000);
-                    // scrolling to bottom of the page step by step
-                    await scrollToBottom(page,500,500);
-                    // scroll to top of the page
-                    await scrolltoTop(page);
-                    // take screenshot
-                    await takeScreenshot(page,"CaseStudiesPage");
-                    // Case studies page header checking
-                    const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']",938.453125,251,"Header","CaseStudies");
-                //     expect.soft(headerCoRes).toBeTruthy();
-                    const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']","header","CaseStudies");
-                    expect.soft(header).toBeTruthy();
-                    // Education videos checking
-                    const educationVideos= page.locator("//div[@id='tab_3']/div/div[contains(@class,'post')]");
-                    const educationVideosCount = await educationVideos.count();
-                    console.log(`Education Videos count : ${educationVideosCount}`);
-                    for(let i=0; i<educationVideosCount; i++){
-                        const video = educationVideos.nth(i);
-                        const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
-                        console.log(`Video name : ${videoName}`);
-                        const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
-                        console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
-                        expect.soft(videoThumbnailResult).toBeTruthy();
-                        const res7 = await hoverAndClickWithLocator(video);
-                        expect.soft(res7).toBeTruthy();
-                        if(res7){
-                                // video header checking
-                                const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
-                                if(videoText.includes(videoName)){
-                                        console.log(`✅ Video header is matched with selected video`);
-                                }else{
-                                        console.log(`⚠️ Video header is not matching with selected video`);
-                                        console.log(`⚠️ Video header is: ${videoText}`);
-                                        expect.soft(false).toBeTruthy();
+                                const res8 = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Case Studies'])[1]");
+                                expect.soft(res8).toBeTruthy();
+                                try {
+                                        await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
+                                } catch (e) {
+                                        throw new error('❌ Case Studies Page did not load within 90s.');
                                 }
-                                const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
-                                console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
-                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                // expect.soft(videoResult).toBeTruthy(); 
-                        }
-                    }
-                    // Industrial Training button checking
-                    const industrialTraingButton = await elementCheck(page,testInfo,"//a[normalize-space()='Industrial Training']","industrialTraingButton","CaseStudies");
-                    expect.soft(industrialTraingButton).toBeTruthy();
-                    if(industrialTraingButton){
-                        const res5 = await hoverAndClickWithXpath(page,"//a[normalize-space()='Industrial Training']");
-                        expect.soft(res5).toBeTruthy();
-                        await page.waitForTimeout(10000);
-                        // Industrial Training videos checking
-                        const IndustrialTrainingVideos= page.locator("//div[@id='tab_2']/div/div[contains(@class,'post')]");
-                        const IndustrialTrainingVideosCount = await IndustrialTrainingVideos.count();
-                        console.log(`Industrial Training Videos count : ${IndustrialTrainingVideosCount}`);
-                        for(let j=0; j<IndustrialTrainingVideosCount; j++){
-                                const video = IndustrialTrainingVideos.nth(j);
-                                const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
-                                console.log(`Video name : ${videoName}`);
-                                const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
-                                console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                                let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
-                                expect.soft(videoThumbnailResult).toBeTruthy();
-                                const res4 = await hoverAndClickWithLocator(video);
-                                expect.soft(res4).toBeTruthy();
-                                if(res4){
-                                        // video header checking
-                                        const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
-                                        if(videoText.includes(videoName)){
-                                                console.log(`✅ Video header is matched with selected video`);
+                                await page.waitForTimeout(2000);
+                                // scrolling to bottom of the page step by step
+                                await scrollToBottom(page,500,500);
+                                // scroll to top of the page
+                                await scrolltoTop(page);
+                                // take screenshot
+                                await takeScreenshot(page,"CaseStudiesPage");
+                                // Case studies page header checking
+                                const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']",938.453125,251,"Header","CaseStudies");
+                                //expect.soft(headerCoRes).toBeTruthy();
+                                const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']","header","CaseStudies");
+                                expect.soft(header).toBeTruthy();
+                                // Education videos checking
+                                const educationVideos= page.locator("//div[contains(@id,'tab')]/div/div[contains(@class,'post')]");
+                                const educationVideosCount = await educationVideos.count();
+                                console.log(`Education Videos count : ${educationVideosCount}`);
+                                if(educationVideosCount != 0){ 
+                                                for(let i=0; i<educationVideosCount; i++){
+                                                        const video = educationVideos.nth(i);
+                                                        const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
+                                                        console.log(`Video name : ${videoName}`);
+                                                        const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
+                                                        console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
+                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        expect.soft(videoThumbnailResult).toBeTruthy();
+                                                        const res7 = await hoverAndClickWithLocator(video);
+                                                        expect.soft(res7).toBeTruthy();
+                                                        if(res7){
+                                                                // video header checking
+                                                                const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
+                                                                if(videoText.includes(videoName)){
+                                                                        console.log(`✅ Video header is matched with selected video`);
+                                                                }else{
+                                                                        console.log(`⚠️ Video header is not matching with selected video`);
+                                                                        console.log(`⚠️ Video header is: ${videoText}`);
+                                                                        expect.soft(false).toBeTruthy();
+                                                                }
+                                                                const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
+                                                                console.log(`✅ ${videoName} src : ${videoSrc}`);
+                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
+                                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
+                                                                // expect.soft(videoResult).toBeTruthy(); 
+                                                        }
+                                                }
                                         }else{
-                                                console.log(`⚠️ Video header is not matching with selected video`);
-                                                console.log(`⚠️ Video header is: ${videoText}`);
+                                                console.error(`❌ NO videos found of Education-Section in Case-Studies page.`);
+                                                expect.soft(false).toBeTruthy(); 
+                                        }
+                                // Industrial Training button checking
+                                const industrialTraingButton = await elementCheck(page,testInfo,"//a[normalize-space()='Industrial Training']","industrialTraingButton","CaseStudies");
+                                expect.soft(industrialTraingButton).toBeTruthy();
+                                if(industrialTraingButton){
+                                        const res5 = await hoverAndClickWithXpath(page,"//a[normalize-space()='Industrial Training']");
+                                        expect.soft(res5).toBeTruthy();
+                                        await page.waitForTimeout(10000);
+                                        // Industrial Training videos checking
+                                        const IndustrialTrainingVideos= page.locator("//div[contains(@id,'tab')]/div/div[contains(@class,'post')]");
+                                        const IndustrialTrainingVideosCount = await IndustrialTrainingVideos.count();
+                                        console.log(`Industrial Training Videos count : ${IndustrialTrainingVideosCount}`);
+                                        if(IndustrialTrainingVideosCount != 0){
+                                                for(let j=0; j<IndustrialTrainingVideosCount; j++){
+                                                        const video = IndustrialTrainingVideos.nth(j);
+                                                        const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
+                                                        console.log(`Video name : ${videoName}`);
+                                                        const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
+                                                        console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
+                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        expect.soft(videoThumbnailResult).toBeTruthy();
+                                                        const res4 = await hoverAndClickWithLocator(video);
+                                                        expect.soft(res4).toBeTruthy();
+                                                        if(res4){
+                                                                // video header checking
+                                                                const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
+                                                                if(videoText.includes(videoName)){
+                                                                        console.log(`✅ Video header is matched with selected video`);
+                                                                }else{
+                                                                        console.log(`⚠️ Video header is not matching with selected video`);
+                                                                        console.log(`⚠️ Video header is: ${videoText}`);
+                                                                        expect.soft(false).toBeTruthy();
+                                                                }
+                                                                const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
+                                                                console.log(`✅ ${videoName} src : ${videoSrc}`);
+                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
+                                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
+                                                                // expect.soft(videoResult).toBeTruthy(); 
+                                                        }  
+                                                }
+                                        }else{ 
+                                        console.error(`❌ NO videos found in Industrial-Training-Section in Case-Studies page.`);
+                                        expect.soft(false).toBeTruthy();
+                                        }
+                                }
+                                // Virtual Tour button checking
+                                const VirtualTourButton = await elementCheck(page,testInfo,"//a[normalize-space()='Virtual Tour']","VirtualTourButton","CaseStudies");
+                                expect.soft(VirtualTourButton).toBeTruthy();
+                                if(VirtualTourButton){
+                                        const res1 = await hoverAndClickWithXpath(page,"//a[normalize-space()='Virtual Tour']");
+                                        expect.soft(res1).toBeTruthy();
+                                        await page.waitForTimeout(5000);
+                                        // Virtual Tour videos checking
+                                        const VirtualTourVideos= page.locator("//div[contains(@id,'tab')]/div/div[contains(@class,'post')]");
+                                        const VirtualTourVideosCount = await VirtualTourVideos.count();
+                                        console.log(`Virtual Tour Videos count : ${VirtualTourVideosCount}`);
+                                        if(VirtualTourVideosCount != 0){
+                                                for(let k=0; k<VirtualTourVideosCount; k++){
+                                                        const video = await VirtualTourVideos.nth(k);
+                                                        const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
+                                                        console.log(`Video name : ${videoName}`);
+                                                        const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
+                                                        console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
+                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        expect.soft(videoThumbnailResult).toBeTruthy();
+                                                        const hoverClickLocatorRes = await hoverAndClickWithLocator(video);
+                                                        expect.soft(hoverClickLocatorRes).toBeTruthy();
+                                                        if(hoverClickLocatorRes){
+                                                                // video header checking
+                                                                const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
+                                                                if(videoText.includes(videoName)){
+                                                                        console.log(`✅ Video header is matched with selected video`);
+                                                                }else{
+                                                                        console.log(`⚠️ Video header is not matching with selected video`);
+                                                                        console.log(`⚠️ Video header is: ${videoText}`);
+                                                                        expect.soft(false).toBeTruthy();
+                                                                }
+                                                                const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
+                                                                console.log(`✅ ${videoName} src : ${videoSrc}`);
+                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
+                                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
+                                                                // expect.soft(videoResult).toBeTruthy(); 
+                                                        }   
+                                                }
+                                        }else{
+                                                console.error(`❌ NO videos found in Virtual-Tour-Section in Case-Studies page.`);
                                                 expect.soft(false).toBeTruthy();
                                         }
-                                        const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
-                                        console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                        const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
-                                        // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                        // expect.soft(videoResult).toBeTruthy(); 
-                                }  
-                        }
-                    }
-                    // Virtual Tour button checking
-                    const VirtualTourButton = await elementCheck(page,testInfo,"//a[normalize-space()='Virtual Tour']","VirtualTourButton","CaseStudies");
-                    expect.soft(VirtualTourButton).toBeTruthy();
-                    if(VirtualTourButton){
-                        const res1 = await hoverAndClickWithXpath(page,"//a[normalize-space()='Virtual Tour']");
-                        expect.soft(res1).toBeTruthy();
-                        await page.waitForTimeout(5000);
-                        // Virtual Tour videos checking
-                        const VirtualTourVideos= page.locator("//div[@id='tab_3']/div/div[contains(@class,'post')]");
-                        const VirtualTourVideosCount = await VirtualTourVideos.count();
-                        console.log(`Virtual Tour Videos count : ${VirtualTourVideosCount}`);
-                        for(let k=0; k<VirtualTourVideosCount; k++){
-                                const video = await VirtualTourVideos.nth(k);
-                                const videoName = await getInnerTextWithXpath(video,"xpath=/a/div[2]/h4");
-                                console.log(`Video name : ${videoName}`);
-                                const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
-                                console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                                let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
-                                expect.soft(videoThumbnailResult).toBeTruthy();
-                                const hoverClickLocatorRes = await hoverAndClickWithLocator(video);
-                                expect.soft(hoverClickLocatorRes).toBeTruthy();
-                                if(hoverClickLocatorRes){
-                                        // video header checking
-                                        const videoText = await getInnerTextWithXpath(page,"(//section[contains(@class,'linkedInPosts')]/div)[1]/div/h2");
-                                        if(videoText.includes(videoName)){
-                                                console.log(`✅ Video header is matched with selected video`);
-                                        }else{
-                                                console.log(`⚠️ Video header is not matching with selected video`);
-                                                console.log(`⚠️ Video header is: ${videoText}`);
-                                                expect.soft(false).toBeTruthy();
-                                        }
-                                        const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
-                                        console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                        const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",15000,false);
-                                        // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                        // expect.soft(videoResult).toBeTruthy(); 
-                                }   
-                        }
-                    } 
-                }  
-            } catch (error) {
+                                } 
+                        } 
+                } catch (error) {
                     console.error(`⚠️ ${error}`);
                     expect.soft(false).toBeTruthy();
-            }
-    }else{console.log(`❌ Case Studies Page test got Failed.`)
-            expect.soft(false).toBeTruthy();
-    }; 
+                }
+        }else{
+                console.log(`❌ Case Studies Page test got Failed.`)
+                expect.soft(false).toBeTruthy();
+        }; 
 });
 // Checking Community Page
 test('Community Page',async({page},testInfo)=>{
