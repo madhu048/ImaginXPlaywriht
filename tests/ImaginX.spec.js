@@ -1467,7 +1467,7 @@ test('Healthcare Page',async({page,request},testInfo)=>{
     }; 
 });
 // Checking Case Studies Page
-test.only('Case Studies Page',async({page,request},testInfo)=>{
+test('Case Studies Page',async({page,request},testInfo)=>{
     if(await urlStatus(page)){
             try {
                     const res11 = await hoverWithXpath(page,"xpath=(//a[normalize-space()='Solutions'])[1]");
