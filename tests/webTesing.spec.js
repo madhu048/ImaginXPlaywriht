@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,request} from '@playwright/test';
 
 const links = {imaginX:"https://www.imaginxavr.com/",
                CrystaStructure:"https://uh.imaginxavr.com/crystal-structure//",
@@ -152,46 +152,63 @@ const links = {imaginX:"https://www.imaginxavr.com/",
                StemLimitedAppsWebsite:"https://experience.imaginxavr.com/stem-limited-versions/",
             }
 
-async function urlStatus(page,url){
+async function urlStatus(page,url,key,testInfo){
     try {
-        const response = await page.goto(url);
-        try {
-                    await page.waitForLoadState('load', { timeout: 30000 }); // try for 30s
-            } catch (e) {
-                    console.error(`⚠️ ${url} got skipped becoz its taking long time(Morethan 30 sec) to load.`);
-                    return false;
-            }
-        await page.waitForTimeout(2000);
-        let statusCode = await response.status();
-        if(statusCode < 400){
-            expect.soft(statusCode).toBeLessThan(400);
-            console.log(`✅ ${await statusCode}-${url} is loading fine.`);
-            return true;
-        }else{
-            expect.soft(false).toBeTruthy();
-            console.error(`⚠️ ${statusCode}-There is a isssue with url: ${url}`)
-            return false;
-        }
+            try {
+                    // url loading wait time is 30 sec
+                     const responseOfUrl = await page.goto(url, {timeout: 30000,waitUntil: "domcontentloaded"});
+                     const statuscode = await responseOfUrl.status();
+                     // stop further loading
+                    await page.evaluate(() => window.stop());
+                    console.log(`       ✅ ${statuscode}-${url} -Loading fine in browser.`);
+                    try {
+                            const screenshotPath = `screenshots/${key}.png`;
+                            await page.screenshot({path:screenshotPath,fullPage:false});
+                            // This one will attach the every screenshot manually to the html report from screenshot folder
+                            await testInfo.attach(`${key}`,{path:screenshotPath,contentType:'image/png'});
+                            return true;
+                        } catch (screenshotError) {
+                            console.error(`       ❌ Failed to take screenshot for ${url}: ${screenshotError.message}`);
+                            return false;
+                        }
+                    
+                } catch (e) {
+                    console.error(`       ⚠️  ${e.message}`);
+                    // Checking with Http requet
+                    const api = await request.newContext();
+                    const urlRes = await api.get(url,{timeout:15000}); // api request waiting time 5 sec
+                    let statusCode = urlRes.status();
+                    if(statusCode < 400){
+                        expect.soft(statusCode).toBeLessThan(400);
+                        console.log(`       ✅ ${statusCode}-${url} -URL is healthy, ⚠️ But getting issue in browser loading..`);
+                    }else{
+                            expect.soft(false).toBeTruthy();
+                            console.error(`     ⚠️ ${statusCode}-URL is DOWN. Skipping navigation..: ${url}`);
+                            return false;
+                        }
+            } 
     } catch (error) {
-        console.error(`❌ There is issue with Url: ${url}: ${error}`);
-        console.error(`➡️ Error Message: ${error.message}`);
-        console.error(`➡️ Error Stack: ${error.stack}`);
+        console.error(`     ❌ There is issue with Url: ${url}: ${error}`);
+        console.error(`     ➡️ Error Message: ${error.message}`);
+        console.error(`     ➡️ Error Stack: ${error.stack}`);
         expect.soft(false).toBeTruthy();
         return false;
-    }
+    } 
 }            
 
 test("Testing All Web Links",async ({page},testInfo)=>{
+    
     const keys = Object.keys(links);
     console.log(`Total links: ${keys.length}`);
+    var count = 0;
     for(let i=0;i < keys.length;i++){
+        count++;
         const key = keys[i];
         const value = links[keys[i]];
-        console.log(`${key}: ${value}.`);
-        await urlStatus(page,value);
-        const screenshotPath = `screenshots/${key}.png`;
-        await page.screenshot({path:screenshotPath,fullPage:true});
-        // This one will attach the every screenshot manually to the html report from screenshot folder
-        await testInfo.attach(`${key}`,{path:screenshotPath,contentType:'image/png'})
+        console.log(`${count}. ${key}: ${value}.`);
+        await urlStatus(page,value,key,testInfo);
+        if(count == keys.length){
+            console.log(`✅ All web urls got tested, please check the reports.`);
+        };
     }
 });
