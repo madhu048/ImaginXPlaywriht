@@ -710,7 +710,7 @@ async function elementCoordinates(page,elementXpath,elementXvalue,elementYvalue,
         }     
 }
 // Home page checking
-test.only('Home Page', async({page,request},testInfo)=>{
+test('Home Page', async({page,request},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/";
         testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
     if(await urlStatus1(page,attemptedUrl,"ImaginX_Home",testInfo)){
