@@ -268,8 +268,7 @@ for(const [name, url] of Object.entries(links)){
     });
 };
 
-// test.only("Testing All Web Links1",async ({page},testInfo)=>{
-    
+// test.only("Testing All Web Links1",async ({page},testInfo)=>{    
 //     let attemptedUrl = "https://www.imaginxav.com/";
 //     // Store the intended URL in annotations so afterEach can read it
 //     testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
