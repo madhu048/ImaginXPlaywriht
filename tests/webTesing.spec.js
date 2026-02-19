@@ -1,4 +1,57 @@
 import {test,expect,request} from '@playwright/test';
+import * as fs from 'fs';
+
+
+let count=1;
+// After each test, append URL if the test failed
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === 'failed') {
+    let attemptedUrl = testInfo.annotations.find(url =>url.type === "attemptedUrl")?.description;
+    // “use the left side if it’s not null or not undefined; otherwise use the right side.”
+    const failedUrl = attemptedUrl ?? await page.url();
+    const workerindex = testInfo.workerIndex;
+    
+    const urlFil = `FailedUrls/FailedUrl_${testInfo.workerIndex}.txt`
+    if(!fs.existsSync(urlFil)){
+      fs.writeFileSync(urlFil, failedUrl + '\n', 'utf8');
+      console.log(`❌ ${count}. Test Failed → saved URL in ${workerindex}: ${failedUrl}`);
+    }else{
+      fs.appendFileSync(urlFil,failedUrl+'\n','utf8');
+      console.log(`❌ ${count}. Test Failed → saved URL in same ${workerindex}: ${failedUrl}`);
+    }
+    count++;
+  }
+});
+
+// printing local date & time
+const date = new Date().toLocaleDateString().replace(/[/\//]/g,'-');
+const time = new Date().toLocaleTimeString().replace(/[:. ]/g,'-');
+const Date_Time = `${date},${time}`;
+console.log(`time is : ${Date_Time}`);
+
+/**
+ * @param {import('@playwright/test').Page} page  -The Playwright Page object.
+ * @param {String} name -Name for the video file (e.g. 'Banner').
+ */
+// Take screenshot
+async function takeScreenshot(page,name,testInfo) {
+
+    if(!await page.isClosed()){
+        try {
+
+        //     await page.screenshot({ path: `screenshots/${name}_${Date_Time}.png`, fullPage: true ,timeout:5000});
+            const screenshotPath = `screenshots/${name}_FullPage_${Date_Time}.png`;
+                            await page.screenshot({path:screenshotPath,fullPage:true,timeout:10000});
+                            // This one will attach the every screenshot manually to the html report from screenshot folder
+                            await testInfo.attach(`${name}`,{path:screenshotPath,contentType:'image/png'});
+        } catch (error) {
+            console.error('⚠️ Screenshot Error : '+error);
+        }
+    }
+    else{
+        console.error(`⚠️ Screenshot not taken for ${name}, because browser has been closed.`);
+    }
+};
 
 const links = {imaginX:"https://www.imaginxavr.com/",
                CrystaStructure:"https://uh.imaginxavr.com/crystal-structure//",
@@ -155,35 +208,29 @@ const links = {imaginX:"https://www.imaginxavr.com/",
 async function urlStatus(page,url,key,testInfo){
     try {
             try {
-                    // url loading wait time is 30 sec
-                     const responseOfUrl = await page.goto(url, {timeout: 30000,waitUntil: "domcontentloaded"});
+                    // url loading wait time is 60 sec
+                     const responseOfUrl = await page.goto(url, {timeout: 60000,waitUntil: "domcontentloaded"});
                      const statuscode = await responseOfUrl.status();
+                     await page.waitForTimeout(5000);
                      // stop further loading
                     await page.evaluate(() => window.stop());
+                    expect(await statuscode).toBeLessThan(400);
                     console.log(`       ✅ ${statuscode}-${url} -Loading fine in browser.`);
-                    try {
-                            const screenshotPath = `screenshots/${key}.png`;
-                            await page.screenshot({path:screenshotPath,fullPage:false});
-                            // This one will attach the every screenshot manually to the html report from screenshot folder
-                            await testInfo.attach(`${key}`,{path:screenshotPath,contentType:'image/png'});
-                            return true;
-                        } catch (screenshotError) {
-                            console.error(`       ❌ Failed to take screenshot for ${url}: ${screenshotError.message}`);
-                            return false;
-                        }
-                    
+                    await takeScreenshot(page,key,testInfo);
                 } catch (e) {
                     console.error(`       ⚠️  ${e.message}`);
                     // Checking with Http requet
                     const api = await request.newContext();
-                    const urlRes = await api.get(url,{timeout:15000}); // api request waiting time 5 sec
+                    const urlRes = await api.get(url,{timeout:15000}); // api request waiting time 15 sec
                     let statusCode = urlRes.status();
-                    if(statusCode < 400){
-                        expect.soft(statusCode).toBeLessThan(400);
+                    if(await statusCode < 400){
+                        expect.soft(await statusCode).toBeLessThan(400);
                         console.log(`       ✅ ${statusCode}-${url} -URL is healthy, ⚠️ But getting issue in browser loading..`);
+                        await takeScreenshot(page,key,testInfo);
                     }else{
                             expect.soft(false).toBeTruthy();
                             console.error(`     ⚠️ ${statusCode}-URL is DOWN. Skipping navigation..: ${url}`);
+                            await takeScreenshot(page,key,testInfo);
                             return false;
                         }
             } 
@@ -192,23 +239,44 @@ async function urlStatus(page,url,key,testInfo){
         console.error(`     ➡️ Error Message: ${error.message}`);
         console.error(`     ➡️ Error Stack: ${error.stack}`);
         expect.soft(false).toBeTruthy();
+        await takeScreenshot(page,key,testInfo);
         return false;
     } 
 }            
 
-test("Testing All Web Links",async ({page},testInfo)=>{
+// test("Testing All Web Links",async ({page},testInfo)=>{
+//     const keys = Object.keys(links);
+//     console.log(`Total links: ${keys.length}`);
+//     var count = 0;
+//     for(let i=0;i < keys.length;i++){
+//         count++;
+//         const key = keys[i];
+//         const value = links[keys[i]];
+//         console.log(`${count}. ${key}: ${value}.`);
+//         await urlStatus(page,value,key,testInfo);
+//         if(count == keys.length){
+//             console.log(`✅ All web urls got tested, please check the reports.`);
+//         };
+//     }
+// });
+for(const [name, url] of Object.entries(links)){
+
+    test(`${name} url status checkin..`,async ({page},testInfo)=>{
+        // Store the intended URL in annotations so afterEach can read it
+        testInfo.annotations.push({type:"attemptedUrl",description:url});
+        await urlStatus(page,url,name,testInfo);
+    });
+};
+
+// test.only("Testing All Web Links1",async ({page},testInfo)=>{
     
-    const keys = Object.keys(links);
-    console.log(`Total links: ${keys.length}`);
-    var count = 0;
-    for(let i=0;i < keys.length;i++){
-        count++;
-        const key = keys[i];
-        const value = links[keys[i]];
-        console.log(`${count}. ${key}: ${value}.`);
-        await urlStatus(page,value,key,testInfo);
-        if(count == keys.length){
-            console.log(`✅ All web urls got tested, please check the reports.`);
-        };
-    }
-});
+//     let attemptedUrl = "https://www.imaginxav.com/";
+//     // Store the intended URL in annotations so afterEach can read it
+//     testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
+//     await page.goto(attemptedUrl);
+//     try {
+//          await page.waitForLoadState('load', { timeout: 40000 }); // try for 40s
+//     } catch (e) {
+//               expect(false).toBeTruthy();
+//     }
+// });

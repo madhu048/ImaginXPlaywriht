@@ -16,6 +16,8 @@ export default defineConfig({
   testDir: './tests',
   /* To clear the screenshot folder for every new execution of project */
   globalSetup: './global-setup.js',
+  /* To merge all text files into a single .txt file after every execution of project */
+  globalTeardown: './global-teardown.js', 
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -38,7 +40,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
   },
-  timeout:2000000,  // Total time out for every test
+  timeout:1000000,  // Total time out for every test
 
   /* Configure projects for major browsers */
   projects: [
@@ -80,11 +82,13 @@ export default defineConfig({
               viewport: { width: 1920, height: 1080 }, // Force desktop size
               video: 'on', // Or 'on'
               screenshot:'on',
+
               // The below code for headed mode.
               // headless:false,
               // viewport:null,
               // launchOptions:{args:['--start-maximized']},
-              // video:'retain-on-failure'
+              // video: 'on', // Or 'on'
+              // screenshot:'on',
        },
     },
   ],
