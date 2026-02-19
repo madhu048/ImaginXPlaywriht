@@ -2200,7 +2200,7 @@ test('FAQ Page',async({page},testInfo)=>{
     }; 
 });
 // Checking contact Us Page
-test('Contact Us Page',async({page},testInfo)=>{
+test.only('Contact Us Page',async({page},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/contact";
         testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
     if(await urlStatus1(page,attemptedUrl,"Contact_Us",testInfo)){

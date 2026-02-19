@@ -80,7 +80,7 @@ export default defineConfig({
               // The code for head less mode
               headless:true,
               viewport: { width: 1920, height: 1080 }, // Force desktop size
-              video: 'on', // Or 'on'
+              video: 'retain-on-failure', // Or 'on'
               screenshot:'on',
 
               // The below code for headed mode.
