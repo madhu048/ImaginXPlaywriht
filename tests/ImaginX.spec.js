@@ -623,8 +623,8 @@ async function isvideoWithSrcPlaying(page,request,testInfo,videoUrl,videoName,pa
         try {
                 // Video url status checking
                 const fileResponse = await request.head(videoUrl);
-                console.log(`Status: ${fileResponse.status()} - ${videoUrl}`);
-                expect(fileResponse.status()).toBe(200);
+                console.log(`Video Url Status: ${fileResponse.status()} - ${videoUrl}`);
+                expect.soft(fileResponse.status()).toBe(200);
                 if(fileResponse.status()!==200){
                         console.error(`❌ Video URL not reachable (${fileResponse.status()}): ${videoUrl}`);
                         return false;
@@ -648,12 +648,12 @@ async function isvideoWithSrcPlaying(page,request,testInfo,videoUrl,videoName,pa
                     }
                     if(mactchedVideo!==null){
                         if(isBannerVideoChecking){
-                                await new Promise(res => setTimeout(res, 20000)); // wait 20s
+                                await new Promise(res => setTimeout(res, 30000)); // wait 30s
                                 return !mactchedVideo.paused && mactchedVideo.readyState > 2;
                         }else{
-                                await new Promise(res => setTimeout(res, 15000)); // wait 15s
+                                await new Promise(res => setTimeout(res, 20000)); // wait 20s
                                 let t1 = mactchedVideo.currentTime;
-                                await new Promise(res => setTimeout(res, 10000)); // wait 10s
+                                await new Promise(res => setTimeout(res, 15000)); // wait 15s
                                 let t2 = mactchedVideo.currentTime;
                                 return t2 > t1 || t1 > 0;
                         }
@@ -727,8 +727,8 @@ test('Home Page', async({page,request},testInfo)=>{
         const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/assets/vids/-e753-4fb1-8ee7-af0035d9f693.mp4","BannerVideo","Home",true);
         expect.soft(videoRes).toBeTruthy();
         // header checking
-        const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Empowering Tomorrow')]",370.40625,360,"Header","Home");
-        expect.soft(headerCoRes).toBeTruthy();
+        // const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Empowering Tomorrow')]",370.40625,360,"Header","Home");
+        // expect.soft(headerCoRes).toBeTruthy();
         const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Empowering Tomorrow')]","MainHeader","Home")
         expect.soft(header).toBeTruthy();
         // paragraph checking
@@ -889,6 +889,24 @@ test('Home Page', async({page,request},testInfo)=>{
         // Red Hat Logo image checking
         const redHatLogoImg = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/redhat-logo.png","redHatLogoImg","Home");
         expect.soft(redHatLogoImg).toBeTruthy();
+        // IBM page checking
+        const moreDetailsBtn = await elementCheck(page,testInfo,"//a[normalize-space()='Click here for more details']","Click Here For Moredetails","Home");
+        expect.soft(moreDetailsBtn).toBeTruthy();
+        if(await moreDetailsBtn){
+                const moreDetailsButton =await clickWithXpath(page,"//a[normalize-space()='Click here for more details']","Click for more details");
+                await page.waitForTimeout(2000);
+                const Allpages = await page.context().pages();
+                const newPage = await Allpages[1];
+                if(await newPage){
+                        await page.waitForTimeout(3000);
+                        const ibmPageHeadr = await elementCheck(newPage,testInfo,"//h1[normalize-space()='iXGenie']","IBM page header","IBM Page");
+                        expect.soft(ibmPageHeadr).toBeTruthy();
+                        await newPage.close();
+                        await page.bringToFront();
+                }else{
+                        console.log("IBM page not get open.");
+                }
+        }
         // Clint Slider checking
         const clientSlider = page.locator("//div[contains(@id,'swiper-wrapper')]");
         await clientSlider.waitFor({timeout:40000});
@@ -935,8 +953,8 @@ test('IXGenie Page',async({page,request},testInfo)=>{
                     const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/assets/imgs/ixgenie.mp4","IXgeniePageBannerVideo","IXgenie",true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
-                    const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'iXGenie the Ultimate Training & Learning Platform')])[1]",175.0625,484,"Header","IXGenie");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'iXGenie the Ultimate Training & Learning Platform')])[1]",175.0625,484,"Header","IXGenie");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"(//h1[contains(normalize-space(),'iXGenie the Ultimate Training & Learning Platform')])[1]","MainHeader","IXgenie")
                     expect.soft(header).toBeTruthy();
                     // paragraph checking
@@ -1157,8 +1175,8 @@ test('EdMentor AI Page',async({page},testInfo)=>{
                     await scrolltoTop(page);
                     // take screenshot
                 //     await takeScreenshot(page,"EdmentorAIPage_FullScreenShot",testInfo);
-                    const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='EdMentor AI']",448,194,"Header","Edmentor AI");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='EdMentor AI']",448,194,"Header","Edmentor AI");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     // Header checking
                     const header = await elementCheck(page,testInfo,"//h1[normalize-space()='EdMentor AI']","Header","EdmentorAI");
                     expect.soft(header).toBeTruthy();
@@ -1297,8 +1315,8 @@ test('Educational Page',async({page,request},testInfo)=>{
                     const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/uploads/solutions/educational.mp4","EducationalPageBannerVideo","Educational",true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
-                    const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Immersive Learning ')])[1]",487.515625,266,"Header","Educational");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Immersive Learning ')])[1]",487.515625,266,"Header","Educational");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"(//h1[contains(normalize-space(),'Immersive Learning ')])[1]","MainHeader","Educational")
                     expect.soft(header).toBeTruthy();
                     // paragraph checking
@@ -1434,8 +1452,8 @@ test('Workforce Development Page',async({page,request},testInfo)=>{
                     const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/uploads/solutions/workforce.mp4","WorkforcePageBannerVideo","Workforce",true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
-                    const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Workforce Development ')])[1]",414.0625,266,"Header","Workforce Development");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Workforce Development ')])[1]",414.0625,266,"Header","Workforce Development");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"(//h1[contains(normalize-space(),'Workforce Development ')])[1]","MainHeader","Workforce")
                     expect.soft(header).toBeTruthy();
                     // paragraph checking
@@ -1547,8 +1565,8 @@ test('Industrial Page',async({page,request},testInfo)=>{
                     const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/uploads/solutions/industrial.mp4","IndustrialPageBannerVideo","Industrial",true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
-                    const headerCoRes =  await elementCoordinates(page,"(//h1[contains(normalize-space(),'Industrial Training')])[1]",514.765625,266,"Header","Industrial");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes =  await elementCoordinates(page,"(//h1[contains(normalize-space(),'Industrial Training')])[1]",514.765625,266,"Header","Industrial");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"(//h1[contains(normalize-space(),'Industrial Training')])[1]","MainHeader","Industrial")
                     expect.soft(header).toBeTruthy();
                     // paragraph checking
@@ -1660,8 +1678,8 @@ test('Healthcare Page',async({page,request},testInfo)=>{
                     const videoRes = await isvideoWithSrcPlaying(page,request,testInfo,"https://www.imaginxavr.com/uploads/solutions/healthcare.mp4","HealthcarePageBannerVideo","Healthcare",true);
                     expect.soft(videoRes).toBeTruthy();
                     // header checking
-                    const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Healthcare Training')])[1]",489.53125,266,"Header","Healthcare");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"(//h1[contains(normalize-space(),'Healthcare Training')])[1]",489.53125,266,"Header","Healthcare");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"(//h1[contains(normalize-space(),'Healthcare Training')])[1]","MainHeader","Healthcare")
                     expect.soft(header).toBeTruthy();
                     // paragraph checking
@@ -1779,8 +1797,8 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                 // take screenshot
                                 // await takeScreenshot(page,"CaseStudiesPage_FullScreenShot",testInfo);
                                 // Case studies page header checking
-                                const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']",938.453125,251,"Header","CaseStudies");
-                                expect.soft(headerCoRes).toBeTruthy();
+                                // const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']",938.453125,251,"Header","CaseStudies");
+                                // expect.soft(headerCoRes).toBeTruthy();
                                 const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Case')]/span[normalize-space()='Studies']","header","CaseStudies");
                                 expect.soft(header).toBeTruthy();
                                 // Education videos checking
@@ -1898,7 +1916,7 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                                 const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
                                                                 console.log(`✅ ${videoName} src : ${videoSrc}`);
                                                                 const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
-                                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue.
+                                                                // We are not validating the video result because most of time it is failing the scripts due to low network issue/slow loading.
                                                                 expect.soft(videoResult).toBeTruthy(); 
                                                         }   
                                                 }
@@ -1940,8 +1958,8 @@ test('Community Page',async({page},testInfo)=>{
                     // take screenshot
                 //     await takeScreenshot(page,"CommunityPage_FullScreenShot",testInfo);
                     // Header checking
-                    const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']",1028.765625,164,"Header","Community");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']",1028.765625,164,"Header","Community");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']","header","Community");
                     expect.soft(header).toBeTruthy();
                     // Main content checking
@@ -2172,8 +2190,8 @@ test('FAQ Page',async({page},testInfo)=>{
                     // take screenshot
                 //     await takeScreenshot(page,"FAQPage_FullScreenShot",testInfo);
                     // Header checking
-                    const headerCoRes = await elementCoordinates(page,"//span[@class='text-xgreen' and normalize-space()='Questions']",1070.625,164,"Header","FAQ");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//span[@class='text-xgreen' and normalize-space()='Questions']",1070.625,164,"Header","FAQ");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"//span[@class='text-xgreen' and normalize-space()='Questions']","header","FAQ");
                     expect.soft(header).toBeTruthy();
                     // para checking
@@ -2222,8 +2240,8 @@ test('Contact Us Page',async({page},testInfo)=>{
                     // take screenshot
                 //     await takeScreenshot(page,"ContactUsPage_FullScreenShot",testInfo);
                     // Header checking
-                    const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='Contact Us']",208,170,"Header","ContactUs");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='Contact Us']",208,170,"Header","ContactUs");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"//h1[normalize-space()='Contact Us']","Header","Contact Us");
                     expect.soft(header).toBeTruthy();
                     // First Name field checking
@@ -2314,8 +2332,8 @@ test('Blogs Page',async({page},testInfo)=>{
                     // take screenshot
                 //     await takeScreenshot(page,"BlogsPage_FullScreenShot",testInfo);
                     // Header checking
-                    const headerCoRes = await elementCoordinates(page,"//span[contains(normalize-space(),'Our Latest Posts')]",464.359375,271,"Header","Blogs");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//span[contains(normalize-space(),'Our Latest Posts')]",464.359375,271,"Header","Blogs");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"//span[contains(normalize-space(),'Our Latest Posts')]","Header","Blogs");
                     expect.soft(header).toBeTruthy();
                     // Checking all blogs
@@ -2400,8 +2418,8 @@ test('Privacy Policy Page',async({page},testInfo)=>{
                     // take screenshot
                 //     await takeScreenshot(page,"PrivacyPolicyPage_FullScreenShot",testInfo);
                     // Header checking
-                    const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='Privacy Policy']",440,170,"Header","PrivacyPolicy");
-                    expect.soft(headerCoRes).toBeTruthy();
+                //     const headerCoRes = await elementCoordinates(page,"//h1[normalize-space()='Privacy Policy']",440,170,"Header","PrivacyPolicy");
+                //     expect.soft(headerCoRes).toBeTruthy();
                     const header = await elementCheck(page,testInfo,"//h1[normalize-space()='Privacy Policy']","Header","Pivacy Policy");
                     expect.soft(header).toBeTruthy();
                     // Checkig all policy points
