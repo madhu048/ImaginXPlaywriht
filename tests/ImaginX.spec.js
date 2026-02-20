@@ -28,7 +28,7 @@ async function urlStatus1(page,url,key,testInfo){
     try {
             try {
                     // url loading wait time is 60 sec
-                     const responseOfUrl = await page.goto(url, {timeout: 60000,waitUntil: "domcontentloaded"});
+                     const responseOfUrl = await page.goto(url, {timeout: 70000});
                      const statuscode = await responseOfUrl.status();
                      await page.waitForTimeout(5000);
                      // stop further loading
