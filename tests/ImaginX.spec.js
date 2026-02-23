@@ -648,14 +648,43 @@ async function isvideoWithSrcPlaying(page,request,testInfo,videoUrl,videoName,pa
                     }
                     if(mactchedVideo!==null){
                         if(isBannerVideoChecking){
-                                await new Promise(res => setTimeout(res, 30000)); // wait 30s
-                                return !mactchedVideo.paused && mactchedVideo.readyState > 2;
+                                // await new Promise(res => setTimeout(res, 30000)); // wait 30s
+                                // return !mactchedVideo.paused && mactchedVideo.readyState > 2;
+
+                                let t1 = mactchedVideo.readyState;
+                                let count =0;
+                                let videoStatus = false;
+                                while(count <= 15){
+                                        if(t1 < 2 && mactchedVideo.paused){
+                                                await new Promise(res => setTimeout(res, 20000)); // wait 20s
+                                                t1 = mactchedVideo.currentTime;
+                                                count++;
+                                        }else{
+                                                videoStatus = true;
+                                                break;
+                                        }     
+                                }
+                                if(count == 15){`${videoName} not loaded in givne 5 minits time limit.`}
+                                return videoStatus;
                         }else{
-                                await new Promise(res => setTimeout(res, 20000)); // wait 20s
                                 let t1 = mactchedVideo.currentTime;
-                                await new Promise(res => setTimeout(res, 15000)); // wait 15s
-                                let t2 = mactchedVideo.currentTime;
-                                return t2 > t1 || t1 > 0;
+                                let count =0;
+                                let videoStatus2 = false;
+                                while(count <= 15){
+                                        if(t1 == 0){
+                                                await new Promise(res => setTimeout(res, 20000)); // wait 20s
+                                                t1 = mactchedVideo.currentTime;
+                                                count++;
+                                        }else{
+                                                videoStatus2 = true;
+                                                break;
+                                        }     
+                                }
+                                if(count == 15){`${videoName} not loaded in givne 5 minits time limit.`}
+                                return videoStatus2;                                
+                                // await new Promise(res => setTimeout(res, 15000)); // wait 15s
+                                // let t2 = mactchedVideo.currentTime;
+                                // return t2 > t1 || t1 > 0;
                         }
                     }else{
                         console.error(`No video found with the url: ${videoUrl} on ${pageName} page. `);
