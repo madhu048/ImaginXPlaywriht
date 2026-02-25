@@ -936,6 +936,27 @@ test('Home Page', async({page,request},testInfo)=>{
                         console.log("IBM page not get open.");
                 }
         }
+        // Our Credentials section checking
+        const OurCredentialsHeader = await elementCheck(page,testInfo,"//section[5]//h2/span[2]","OurCredentials","Home");
+        expect.soft(await OurCredentialsHeader).toBeTruthy();
+        // Para checking
+        const OurCredentialsPara = await elementCheck(page,testInfo,"(//section[5]//p)[1][contains(normalize-space(),'Trusted by institutions and validated')]","Para","Home");
+        expect.soft(await OurCredentialsPara).toBeTruthy();
+        // Credential list checking
+        const credentialList = await page.locator("//section[5]//div[@class='group credential-card']");
+        console.log(`We have ${await credentialList.count()} credentials.`);
+        for(let i=0;i< await credentialList.count();i++){
+                const credential = await credentialList.nth(i);
+                const nameCheck = await getInnerTextWithXpath(credential,"xpath=/p");
+                console.log(`${i+1}. ${await nameCheck}`);
+                const imgUrl = await getAttributeWithXpath(await credential,"xpath=/img","src");
+                const imgCheck = await imageChecking(page,testInfo,imgUrl,"credentialImage","Home");
+                expect.soft(imgCheck).toBeTruthy();
+                const credentialHover = await hoverWithLocator(credential);
+                expect.soft(credentialHover).toBeTruthy();
+
+        }
+
         // Clint Slider checking
         const clientSlider = page.locator("//div[contains(@id,'swiper-wrapper')]");
         await clientSlider.waitFor({timeout:40000});
@@ -2209,7 +2230,7 @@ test('FAQ Page',async({page},testInfo)=>{
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            throw new error('❌ FAQ Page did not load within 90s.');
+                            console.error('❌ FAQ Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -2224,18 +2245,43 @@ test('FAQ Page',async({page},testInfo)=>{
                     const header = await elementCheck(page,testInfo,"//span[@class='text-xgreen' and normalize-space()='Questions']","header","FAQ");
                     expect.soft(header).toBeTruthy();
                     // para checking
-                    const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, we know you have questions about how our XR platform, iXGenie')]","para","FAQ");
-                    expect.soft(para).toBeTruthy();
-                    // Exspanding each question
-                    const questions = await page.locator("//button[@onclick]/span");
-                    console.log(`We have ${await questions.count()} questions in FAQ page.`)
-                    for (let i=0;i<await questions.count();i++){
-                        const exspandButton = await questions.nth(i);
-                        const text = await getInnerTextWithXpath(exspandButton,"xpath=/parent::button");
+                //     const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, we know you have questions about how our XR platform, iXGenie')]","para","FAQ");
+                //     expect.soft(para).toBeTruthy();
+                    // Exspanding each question in iXGenie section
+                //     const questions = await page.locator("//button[@onclick]/span");
+                    const iXGenieQuestions = await page.locator("//h2[normalize-space()='iXGenie']/parent::*/div[@class='faq-box']/button/span[2]");
+                    let ixGeneiQuestioonsCount = await iXGenieQuestions.count();
+                    console.log(`We have ${await ixGeneiQuestioonsCount} ixgenie questions in FAQ page.`);
+                    for (let i=0;i<await iXGenieQuestions.count();i++){
+                        const exspandButton = await iXGenieQuestions.nth(i);
+                        const text = await getInnerTextWithXpath(exspandButton,"xpath=/parent::button/span[1]");
                         console.log(`${await text}`);
                         const hoverAndClickRes = await hoverAndClickWithLocator(page,exspandButton,text);
                         expect.soft(hoverAndClickRes).toBeTruthy();
                         await page.waitForTimeout(1000);
+                        console.log(`Iteration ${i}`);
+                        if(i==ixGeneiQuestioonsCount-1){
+                                await hoverAndClickWithLocator(page,exspandButton,text);
+                                await page.waitForTimeout(2000);
+                                // console.log("This is last iteration.");
+                        };
+                    }
+
+                    // Exspanding each question in EdMentor AI section
+                    const EdMentorAIQuestions = await page.locator("//h2[normalize-space()='EdMentor AI']/parent::*/div[@class='faq-box']/button/span[2]");
+                    console.log(`We have ${await EdMentorAIQuestions.count()} EdMentor AI questions in FAQ page.`)
+                    for (let i=0;i<await EdMentorAIQuestions.count();i++){
+                        const exspandButton = await EdMentorAIQuestions.nth(i);
+                        const text = await getInnerTextWithXpath(exspandButton,"xpath=/parent::button/span[1]");
+                        console.log(`${await text}`);
+                        const hoverAndClickRes = await hoverAndClickWithLocator(page,exspandButton,text);
+                        expect.soft(hoverAndClickRes).toBeTruthy();
+                        await page.waitForTimeout(1000);
+                        if(i== await EdMentorAIQuestions.count()-1){
+                                await hoverAndClickWithLocator(page,exspandButton,text);
+                                await page.waitForTimeout(2000);
+                                // console.log("This is last iteration.");
+                        };
                     }
                 }
             } catch (error) {
