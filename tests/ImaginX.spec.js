@@ -1822,7 +1822,7 @@ test('Healthcare Page',async({page,request},testInfo)=>{
     }; 
 });
 // Checking Case Studies Page
-test.only('Case Studies Page',async({page,request},testInfo)=>{
+test('Case Studies Page',async({page,request},testInfo)=>{
         // Overriding the time limit for the test to 45 min
         await test.setTimeout(2500000);
         let attemptedUrl = "https://www.imaginxavr.com/case-studies/category/education";
