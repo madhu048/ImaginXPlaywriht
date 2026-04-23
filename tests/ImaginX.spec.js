@@ -1822,7 +1822,7 @@ test('Healthcare Page',async({page,request},testInfo)=>{
     }; 
 });
 // Checking Case Studies Page
-test('Case Studies Page',async({page,request},testInfo)=>{
+test.only('Case Studies Page',async({page,request},testInfo)=>{
         // Overriding the time limit for the test to 45 min
         await test.setTimeout(2500000);
         let attemptedUrl = "https://www.imaginxavr.com/case-studies/category/education";
@@ -1830,6 +1830,7 @@ test('Case Studies Page',async({page,request},testInfo)=>{
     if(await urlStatus1(page,attemptedUrl,"Case_Studies",testInfo)){
             try {
                     const res11 = await hoverWithXpath(page,"xpath=(//a[normalize-space()='Solutions'])[1]","Solutions");
+                    console.log(`Hover on Solutions link status : ${res11} and Type of res11 is : ${typeof res11}`);
                     expect.soft(res11,'❌ Case Studies link click failed').toBeTruthy();
                     if(res11){
                                 const res8 = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Case Studies'])[1]","Case Studies");
@@ -1862,7 +1863,7 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                         console.log(`Video name : ${await videoName}`);
                                                         const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
                                                         console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        let videoThumbnailResult = await imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
                                                         expect.soft(videoThumbnailResult).toBeTruthy();
                                                         const res7 = await hoverAndClickWithLocator(page,video,videoName);
                                                         expect.soft(res7).toBeTruthy();
@@ -1905,7 +1906,7 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                         console.log(`Video name : ${await videoName}`);
                                                         const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
                                                         console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        let videoThumbnailResult = await imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
                                                         expect.soft(videoThumbnailResult).toBeTruthy();
                                                         const res4 = await hoverAndClickWithLocator(page,video,videoName);
                                                         expect.soft(res4).toBeTruthy();
@@ -1949,7 +1950,7 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                         console.log(`Video name : ${await videoName}`);
                                                         const videoThumbNailSrc = await getAttributeWithXpath(video,"xpath=/a/div[1]/img","src");
                                                         console.log(`${videoName} thumbnail src : ${videoThumbNailSrc}`);
-                                                        let videoThumbnailResult = imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
+                                                        let videoThumbnailResult = await imageChecking(page,testInfo,videoThumbNailSrc,videoName,"CaseStudies");
                                                         expect.soft(videoThumbnailResult).toBeTruthy();
                                                         const hoverClickLocatorRes = await hoverAndClickWithLocator(page,video,videoName);
                                                         expect.soft(hoverClickLocatorRes).toBeTruthy();
@@ -1985,20 +1986,20 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                 expect.soft(false).toBeTruthy();
         }; 
 });
-// Checking Community Page
-test('Community Page',async({page},testInfo)=>{
-        let attemptedUrl = "https://www.imaginxavr.com/community";
+// Checking About Us Page
+test('About Us Page',async({page},testInfo)=>{
+        let attemptedUrl = "https://www.imaginxavr.com/about-us";
         testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
-    if(await urlStatus1(page,attemptedUrl,"Community",testInfo)){
+    if(await urlStatus1(page,attemptedUrl,"About Us",testInfo)){
         
             try {
-                    const res = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='Community'])[1]","Community");
-                    expect.soft(res,'❌ Community link click failed').toBeTruthy();
+                    const res = await hoverAndClickWithXpath(page,"xpath=(//a[normalize-space()='About Us'])[1]","About Us");
+                    expect.soft(res,'❌ About Us link click failed').toBeTruthy();
                     if(res){
                     try {
                             await page.waitForLoadState('load', { timeout: 90000 }); // try for 90s
                     } catch (e) {
-                            throw new error('❌ Community Page did not load within 90s.');
+                            throw new error('❌ About Us Page did not load within 90s.');
                     }
                     await page.waitForTimeout(2000);
                     // scrolling to bottom of the page step by step
@@ -2006,164 +2007,164 @@ test('Community Page',async({page},testInfo)=>{
                     // scroll to top of the page
                     await scrolltoTop(page);
                     // take screenshot
-                //     await takeScreenshot(page,"CommunityPage_FullScreenShot",testInfo);
+                //     await takeScreenshot(page,"AboutUsPage_FullScreenShot",testInfo);
                     // Header checking
-                //     const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']",1028.765625,164,"Header","Community");
+                //     const headerCoRes = await elementCoordinates(page,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']",1028.765625,164,"Header","About Us");
                 //     expect.soft(headerCoRes).toBeTruthy();
-                    const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']","header","Community");
+                    const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']","header","About Us");
                     expect.soft(header).toBeTruthy();
                     // Main content checking
-                    const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX specializes in creating cutting-edge virtual reality')]","para","Community");
+                    const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX specializes in creating cutting-edge virtual reality')]","para","About Us");
                     expect.soft(para).toBeTruthy();
                     // Poster checking
-                    const poster = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/communityHero.png","poster","Community");
+                    const poster = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/communityHero.png","poster","About Us");
                     expect.soft(poster).toBeTruthy();
                     // Sub-header checking
-                    const subHeaderText= await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Story')]","subHeaderText","Community");
+                    const subHeaderText= await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Story')]","subHeaderText","About Us");
                     expect.soft(subHeaderText).toBeTruthy(); 
                     // Our story content checking
-                    const ourStoryContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX (iX), a member of the Kastech Software Solutions Group')]","ourStoryContent","Community");
+                    const ourStoryContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX (iX), a member of the Kastech Software Solutions Group')]","ourStoryContent","About Us");
                     expect.soft(ourStoryContent).toBeTruthy();
                     // Header2 text checking
-                    const MissionValuesHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Mission & values')]","MissionValuesHeader","Community");
+                    const MissionValuesHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Mission & values')]","MissionValuesHeader","About Us");
                     expect.soft(MissionValuesHeader).toBeTruthy();
                     // Mission image checking
-                    const missionImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/mission.svg","missionImage","Community");
+                    const missionImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/mission.svg","missionImage","About Us");
                     expect.soft(missionImage).toBeTruthy();
                     // Missing header text checking
-                    const missionText = await elementCheck(page,testInfo,"//h3[normalize-space()='Mission']","missionText","Community")
+                    const missionText = await elementCheck(page,testInfo,"//h3[normalize-space()='Mission']","missionText","About Us")
                     expect.soft(missionText).toBeTruthy();
                     // Mission content checking
-                    const missionContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, our mission is to revolutionize learning, training')]","missingContent","Community");
+                    const missionContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, our mission is to revolutionize learning, training')]","missingContent","About Us");
                     expect.soft(missionContent).toBeTruthy();
                     // Vision image checking
-                    const VisionImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/vision.svg","VisionImage","Community");
+                    const VisionImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/vision.svg","VisionImage","About Us");
                     expect.soft(VisionImage).toBeTruthy();
                     // Vision header text checking
-                    const VisionText = await elementCheck(page,testInfo,"//h3[normalize-space()='Vision']","VisionText","Community")
+                    const VisionText = await elementCheck(page,testInfo,"//h3[normalize-space()='Vision']","VisionText","About Us")
                     expect.soft(VisionText).toBeTruthy();
                     // Vision content checking
-                    const VisionContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'Our vision is to lead the future of immersive technology')]","VisionContent","Community");
+                    const VisionContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'Our vision is to lead the future of immersive technology')]","VisionContent","About Us");
                     expect.soft(VisionContent).toBeTruthy();
                     // Collaboration image checking
-                    const CollaborationImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/collaboration.svg","CollaborationImage","Community");
+                    const CollaborationImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/collaboration.svg","CollaborationImage","About Us");
                     expect.soft(CollaborationImage).toBeTruthy();
                     // Collaboration header text checking
-                    const CollaborationText = await elementCheck(page,testInfo,"//h3[normalize-space()='Collaboration']","CollaborationText","Community")
+                    const CollaborationText = await elementCheck(page,testInfo,"//h3[normalize-space()='Collaboration']","CollaborationText","About Us")
                     expect.soft(CollaborationText).toBeTruthy();
                     // Collaboration content checking
-                    const CollaborationContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We believe that great work is the result of collaboration between our team and our clients')]","CollaborationContent","Community");
+                    const CollaborationContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We believe that great work is the result of collaboration between our team and our clients')]","CollaborationContent","About Us");
                     expect.soft(CollaborationContent).toBeTruthy();
                     // VisInnovationion image checking
-                    const InnovationImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/innovation.svg","InnovationImage","Community");
+                    const InnovationImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/innovation.svg","InnovationImage","About Us");
                     expect.soft(InnovationImage).toBeTruthy();
                     // Innovation header text checking
-                    const InnovationText = await elementCheck(page,testInfo,"//h3[normalize-space()='Innovation']","InnovationText","Community")
+                    const InnovationText = await elementCheck(page,testInfo,"//h3[normalize-space()='Innovation']","InnovationText","About Us")
                     expect.soft(InnovationText).toBeTruthy();
                     // Innovation content checking
-                    const InnovationContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, we are committed to staying at the forefront of the ever-evolving digital space')]","InnovationContent","Community");
+                    const InnovationContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'At imaginX, we are committed to staying at the forefront of the ever-evolving digital space')]","InnovationContent","About Us");
                     expect.soft(InnovationContent).toBeTruthy();
                     // Integrity image checking
-                    const IntegrityImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/integrity.svg","IntegrityImage","Community");
+                    const IntegrityImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/integrity.svg","IntegrityImage","About Us");
                     expect.soft(IntegrityImage).toBeTruthy();
                     // Integrity header text checking
-                    const IntegrityText = await elementCheck(page,testInfo,"//h3[normalize-space()='Integrity']","IntegrityText","Community")
+                    const IntegrityText = await elementCheck(page,testInfo,"//h3[normalize-space()='Integrity']","IntegrityText","About Us")
                     expect.soft(IntegrityText).toBeTruthy();
                     // Integrity content checking
-                    const IntegrityContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We uphold the highest standards of integrity and professionalism')]","IntegrityContent","Community");
+                    const IntegrityContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We uphold the highest standards of integrity and professionalism')]","IntegrityContent","About Us");
                     expect.soft(IntegrityContent).toBeTruthy();
                     // Result Driven image checking
-                    const ResultDrivenImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/result_driven.svg","ResultDrivenImage","Community");
+                    const ResultDrivenImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/result_driven.svg","ResultDrivenImage","About Us");
                     expect.soft(ResultDrivenImage).toBeTruthy();
                     // Result Driven header text checking
-                    const ResultDrivenText = await elementCheck(page,testInfo,"//h3[normalize-space()='Result Driven']","ResultDrivenText","Community")
+                    const ResultDrivenText = await elementCheck(page,testInfo,"//h3[normalize-space()='Result Driven']","ResultDrivenText","About Us")
                     expect.soft(ResultDrivenText).toBeTruthy();
                     // Result Driven content checking
-                    const ResultDrivenContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We are dedicated to delivering tangible results that help our clients achieve their goals')]","ResultDrivenContent","Community");
+                    const ResultDrivenContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'We are dedicated to delivering tangible results that help our clients achieve their goals')]","ResultDrivenContent","About Us");
                     expect.soft(ResultDrivenContent).toBeTruthy();
                     // Our team button checking
-                    const ourTeamButton = await elementCheck(page,testInfo,"//p[normalize-space()='Our Team']","ourTeamButton","Community");
+                    const ourTeamButton = await elementCheck(page,testInfo,"//p[normalize-space()='Our Team']","ourTeamButton","About Us");
                     expect.soft(ourTeamButton).toBeTruthy();
                     // Our team header checking
-                    const ourTeamHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'The People Behind')]/span[normalize-space()='imaginX']","ourTeamHeader","Community");
+                    const ourTeamHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'The People Behind')]/span[normalize-space()='imaginX']","ourTeamHeader","About Us");
                     expect.soft(ourTeamHeader).toBeTruthy();
                     // Michael Matthews image checking
-                    const MichaelMatthewsImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/mathews.png","MichaelMatthewsImage","Community");
+                    const MichaelMatthewsImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/mathews.png","MichaelMatthewsImage","About Us");
                     expect.soft(MichaelMatthewsImage).toBeTruthy();
                     // Michael Matthews name checking
-                    const MichaelMatthewsName = await elementCheck(page,testInfo,"//p[normalize-space()='Michael Matthews']","MichaelMatthewsName","Community");
+                    const MichaelMatthewsName = await elementCheck(page,testInfo,"//p[normalize-space()='Michael Matthews']","MichaelMatthewsName","About Us");
                     expect.soft(MichaelMatthewsName).toBeTruthy();
                     // Michael Matthews Designation checking
-                    const MichaelMatthewsDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Michael Matthews']/parent::div/div/p[normalize-space()='Chief Inspiration and Digital Advisor']","MichaelMatthewsDesignation","Community");
+                    const MichaelMatthewsDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Michael Matthews']/parent::div/div/p[normalize-space()='Chief Inspiration and Digital Advisor']","MichaelMatthewsDesignation","About Us");
                     expect.soft(MichaelMatthewsDesignation).toBeTruthy();
                     // Michael Matthews linkedin icon checking
-                    const MichaelMatthewsLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/mmathews1']/i","MichaelMatthewsLinkedinIcon","Community");
+                    const MichaelMatthewsLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/mmathews1']/i","MichaelMatthewsLinkedinIcon","About Us");
                     expect.soft(MichaelMatthewsLinkedinIcon).toBeTruthy();
                     // Girish Prabhu image checking
-                    const GirishPrabhuImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/girish.png","GirishPrabhuImage","Community");
+                    const GirishPrabhuImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/girish.png","GirishPrabhuImage","About Us");
                     expect.soft(GirishPrabhuImage).toBeTruthy();
                     // Girish Prabhu name checking
-                    const GirishPrabhuName = await elementCheck(page,testInfo,"//p[normalize-space()='Girish Prabhu']","GirishPrabhuName","Community");
+                    const GirishPrabhuName = await elementCheck(page,testInfo,"//p[normalize-space()='Girish Prabhu']","GirishPrabhuName","About Us");
                     expect.soft(GirishPrabhuName).toBeTruthy();
                     // Girish Prabhu Designation checking
-                    const GirishPrabhuDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Girish Prabhu']/parent::div/div/p[normalize-space()='CEO']","GirishPrabhuDesignation","Community");
+                    const GirishPrabhuDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Girish Prabhu']/parent::div/div/p[normalize-space()='CEO']","GirishPrabhuDesignation","About Us");
                     expect.soft(GirishPrabhuDesignation).toBeTruthy();
                     // Girish Prabhu linkedin icon checking
-                    const GirishPrabhuLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/girishprab/']/i","GirishPrabhuLinkedinIcon","Community");
+                    const GirishPrabhuLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/girishprab/']/i","GirishPrabhuLinkedinIcon","About Us");
                     expect.soft(GirishPrabhuLinkedinIcon).toBeTruthy();
                     // Suresh Katamreddy image checking
-                    const SureshKatamreddyImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/suresh.png","SureshKatamreddyImage","Community");
+                    const SureshKatamreddyImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/suresh.png","SureshKatamreddyImage","About Us");
                     expect.soft(SureshKatamreddyImage).toBeTruthy();
                     // Suresh Katamreddy name checking
-                    const SureshKatamreddyName = await elementCheck(page,testInfo,"//p[normalize-space()='Suresh Katamreddy']","SureshKatamreddyName","Community");
+                    const SureshKatamreddyName = await elementCheck(page,testInfo,"//p[normalize-space()='Suresh Katamreddy']","SureshKatamreddyName","About Us");
                     expect.soft(SureshKatamreddyName).toBeTruthy();
                     // Suresh Katamreddy Designation checking
-                    const SureshKatamreddyDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Suresh Katamreddy']/parent::div/div/p[normalize-space()='Chief Operating Officer']","SureshKatamreddyDesignation","Community");
+                    const SureshKatamreddyDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Suresh Katamreddy']/parent::div/div/p[normalize-space()='Chief Operating Officer']","SureshKatamreddyDesignation","About Us");
                     expect.soft(SureshKatamreddyDesignation).toBeTruthy();
                     // Suresh Katamreddy linkedin icon checking
-                    const SureshKatamreddyLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/suresh-katamreddy-9a683546']/i","SureshKatamreddyLinkedinIcon","Community");
+                    const SureshKatamreddyLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/suresh-katamreddy-9a683546']/i","SureshKatamreddyLinkedinIcon","About Us");
                     expect.soft(SureshKatamreddyLinkedinIcon).toBeTruthy();
                     // Fine Taufatofua image checking
-                    const FineTaufatofuaImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/fine.png","FineTaufatofuaImage","Community");
+                    const FineTaufatofuaImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/fine.png","FineTaufatofuaImage","About Us");
                     expect.soft(FineTaufatofuaImage).toBeTruthy();
                     // Fine Taufatofua name checking
-                    const FineTaufatofuaName = await elementCheck(page,testInfo,"//p[normalize-space()='Fine Taufatofua']","FineTaufatofuaName","Community");
+                    const FineTaufatofuaName = await elementCheck(page,testInfo,"//p[normalize-space()='Fine Taufatofua']","FineTaufatofuaName","About Us");
                     expect.soft(FineTaufatofuaName).toBeTruthy();
                     // Fine Taufatofua Designation checking
-                    const FineTaufatofuaDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Fine Taufatofua']/parent::div/div/p[normalize-space()='Director of Customer Success']","FineTaufatofuaDesignation","Community");
+                    const FineTaufatofuaDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Fine Taufatofua']/parent::div/div/p[normalize-space()='Director of Customer Success']","FineTaufatofuaDesignation","About Us");
                     expect.soft(FineTaufatofuaDesignation).toBeTruthy();
                     // Fine Taufatofua linkedin icon checking
-                    const FineTaufatofuaLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/finetaufatofua/']/i","FineTaufatofuaLinkedinIcon","Community");
+                    const FineTaufatofuaLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/finetaufatofua/']/i","FineTaufatofuaLinkedinIcon","About Us");
                     expect.soft(FineTaufatofuaLinkedinIcon).toBeTruthy();
                     // Srilatha Ramamurthy image checking
-                    const SrilathaRamamurthyImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/srilatha.png","SrilathaRamamurthyImage","Community");
+                    const SrilathaRamamurthyImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/srilatha.png","SrilathaRamamurthyImage","About Us");
                     expect.soft(SrilathaRamamurthyImage).toBeTruthy();
                     // Srilatha Ramamurthy name checking
-                    const SrilathaRamamurthyName = await elementCheck(page,testInfo,"//p[normalize-space()='Srilatha Ramamurthy']","SrilathaRamamurthyName","Community");
+                    const SrilathaRamamurthyName = await elementCheck(page,testInfo,"//p[normalize-space()='Srilatha Ramamurthy']","SrilathaRamamurthyName","About Us");
                     expect.soft(SrilathaRamamurthyName).toBeTruthy();
                     // Srilatha Ramamurthy Designation checking
-                    const SrilathaRamamurthyDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Srilatha Ramamurthy']/parent::div/div/p[normalize-space()='Project Manager']","SrilathaRamamurthyDesignation","Community");
+                    const SrilathaRamamurthyDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Srilatha Ramamurthy']/parent::div/div/p[normalize-space()='Project Manager']","SrilathaRamamurthyDesignation","About Us");
                     expect.soft(SrilathaRamamurthyDesignation).toBeTruthy();
                     // Srilatha Ramamurthy linkedin icon checking
-                    const SrilathaRamamurthyLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/srilatha-r-a8171a269']/i","SrilathaRamamurthyLinkedinIcon","Community");
+                    const SrilathaRamamurthyLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/srilatha-r-a8171a269']/i","SrilathaRamamurthyLinkedinIcon","About Us");
                     expect.soft(SrilathaRamamurthyLinkedinIcon).toBeTruthy();
                     // Tyler Pitts image checking
-                    const TylerPittsImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/tyler.png","TylerPittsImage","Community");
+                    const TylerPittsImage = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/team/tyler.png","TylerPittsImage","About Us");
                     expect.soft(TylerPittsImage).toBeTruthy();
                     // Tyler Pitts name checking
-                    const TylerPittsName = await elementCheck(page,testInfo,"//p[normalize-space()='Tyler Pitts']","TylerPittsName","Community");
+                    const TylerPittsName = await elementCheck(page,testInfo,"//p[normalize-space()='Tyler Pitts']","TylerPittsName","About Us");
                     expect.soft(TylerPittsName).toBeTruthy();
                     // Tyler Pitts Designation checking
-                    const TylerPittsDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Tyler Pitts']/parent::div/div/p[normalize-space()='Lead Architect']","TylerPittsDesignation","Community");
+                    const TylerPittsDesignation = await elementCheck(page,testInfo,"//p[normalize-space()='Tyler Pitts']/parent::div/div/p[normalize-space()='Lead Architect']","TylerPittsDesignation","About Us");
                     expect.soft(TylerPittsDesignation).toBeTruthy();
                     // Tyler Pitts linkedin icon checking
-                    const TylerPittsLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/srilatha-r-a8171a269']/i","TylerPittsLinkedinIcon","Community");
+                    const TylerPittsLinkedinIcon = await elementCheck(page,testInfo,"//a[@href='https://www.linkedin.com/in/srilatha-r-a8171a269']/i","TylerPittsLinkedinIcon","About Us");
                     expect.soft(TylerPittsLinkedinIcon).toBeTruthy();
                     // Our blogs header checking
-                    const ourBlogsHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Blogs')]","ourBlogsHeader","Community");
+                    const ourBlogsHeader = await elementCheck(page,testInfo,"//h2[contains(normalize-space(),'Blogs')]","ourBlogsHeader","About Us");
                     expect.soft(ourBlogsHeader).toBeTruthy();
                     // Our blogs content checking
-                    const ourBlogsContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'Stay informed with our latest insights, industry trends')]","ourBlogsContent","Community");
+                    const ourBlogsContent = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'Stay informed with our latest insights, industry trends')]","ourBlogsContent","About Us");
                     expect.soft(ourBlogsContent).toBeTruthy();
                     const blogs = await page.locator("//section[contains(@class,'ourBlogsSec')]/div[2]/div");
                     const blogsCount = await blogs.count();
@@ -2173,7 +2174,7 @@ test('Community Page',async({page},testInfo)=>{
                         const blogImageSrc = await getAttributeWithXpath(blog,"xpath=/div[contains(@class,'Img')]/img","src");
                         if(blogImageSrc){
                                 console.log(`${i}.Blog image src is: ${blogImageSrc}`)
-                                const blogImage = await imageChecking(page,testInfo,blogImageSrc,"BlogImage","Community");
+                                const blogImage = await imageChecking(page,testInfo,blogImageSrc,"BlogImage","About Us");
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
                                         console.log(`✅ ${i}.Blog image displayed`);
@@ -2213,7 +2214,7 @@ test('Community Page',async({page},testInfo)=>{
                     console.error(`⚠️ ${error}`);
                     expect.soft(false).toBeTruthy();
             }
-    }else{console.log(`❌ Community Page test got Failed.`)
+    }else{console.log(`❌ About Us Page test got Failed.`)
             expect.soft(false).toBeTruthy();
     }; 
 });
@@ -2420,7 +2421,7 @@ test('Blogs Page',async({page},testInfo)=>{
                         const blogImageSrc = await getAttributeWithXpath(blog,"xpath=/div[contains(@class,'Img')]/img","src");
                         if(blogImageSrc){
                                 console.log(`${i}.Blog image src is: ${blogImageSrc}`)
-                                const blogImage = await imageChecking(page,testInfo,blogImageSrc,"BlogImage","Community");
+                                const blogImage = await imageChecking(page,testInfo,blogImageSrc,"BlogImage","Blogs");
                                 expect.soft(blogImage).toBeTruthy();
                                 if(blogImage){
                                         console.log(`✅ ${i}.Blog image displayed`);
