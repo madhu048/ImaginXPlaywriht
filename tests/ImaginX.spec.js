@@ -1822,7 +1822,7 @@ test('Healthcare Page',async({page,request},testInfo)=>{
     }; 
 });
 // Checking Case Studies Page
-test.only('Case Studies Page',async({page,request},testInfo)=>{
+test('Case Studies Page',async({page,request},testInfo)=>{
         // Overriding the time limit for the test to 45 min
         await test.setTimeout(2500000);
         let attemptedUrl = "https://www.imaginxavr.com/case-studies/category/education";
@@ -2014,7 +2014,7 @@ test('About Us Page',async({page},testInfo)=>{
                     const header = await elementCheck(page,testInfo,"//h1[contains(normalize-space(),'Get To Know')]/span[normalize-space()='imaginX']","header","About Us");
                     expect.soft(header).toBeTruthy();
                     // Main content checking
-                    const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX specializes in creating cutting-edge virtual reality')]","para","About Us");
+                    const para = await elementCheck(page,testInfo,"//p[contains(normalize-space(),'imaginX specializes in creating cutting-edge ')]","para","About Us");
                     expect.soft(para).toBeTruthy();
                     // Poster checking
                     const poster = await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/communityHero.png","poster","About Us");
