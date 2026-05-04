@@ -2,6 +2,7 @@ import {test,expect,request} from "@playwright/test";
 import { error } from "console";
 // import { request } from "https";
 import * as fs from 'fs';
+import { copySync } from "fs-extra";
 
 let count=1;
 // After each test, append URL if the test failed
@@ -1823,6 +1824,7 @@ test('Healthcare Page',async({page,request},testInfo)=>{
 });
 // Checking Case Studies Page
 test('Case Studies Page',async({page,request},testInfo)=>{
+        const videoUrlsList = [];
         // Overriding the time limit for the test to 45 min
         await test.setTimeout(2500000);
         let attemptedUrl = "https://www.imaginxavr.com/case-studies/category/education";
@@ -1879,9 +1881,10 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                                 }
                                                                 const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
                                                                 console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
+                                                                // videoUrlsList.push({videoname: await videoName, videosrc: await videoSrc});
+                                                                // const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
                                                                 // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                                                expect.soft(videoResult).toBeTruthy(); 
+                                                                // expect.soft(videoResult).toBeTruthy(); 
                                                         }
                                                 }
                                         }else{
@@ -1922,9 +1925,10 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                                 }
                                                                 const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
                                                                 console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
+                                                                // videoUrlsList.push({videoname: await videoName, videosrc: await videoSrc});
+                                                                // const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
                                                                 // We are not validating the video result because most of time it is failing the scripts due to low network issue.
-                                                                expect.soft(videoResult).toBeTruthy(); 
+                                                                // expect.soft(videoResult).toBeTruthy(); 
                                                         }  
                                                 }
                                         }else{ 
@@ -1966,9 +1970,10 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                                                 }
                                                                 const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
                                                                 console.log(`✅ ${videoName} src : ${videoSrc}`);
-                                                                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
+                                                                // videoUrlsList.push({videoname: await videoName, videosrc: await videoSrc});
+                                                                // const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"IXgenie",false);
                                                                 // We are not validating the video result because most of time it is failing the scripts due to low network issue/slow loading.
-                                                                expect.soft(videoResult).toBeTruthy(); 
+                                                                // expect.soft(videoResult).toBeTruthy(); 
                                                         }   
                                                 }
                                         }else{
@@ -1977,6 +1982,8 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                                         }
                                 } 
                         } 
+                        // fs.writeFileSync('CaseStudiesVideoUrls.json', JSON.stringify(videoUrlsList, null, 2));
+                        // console.log(`All video URLs have been saved to CaseStudiesVideoUrls.json file.`);
                 } catch (error) {
                     console.error(`⚠️ ${error}`);
                     expect.soft(false).toBeTruthy();
@@ -1986,6 +1993,18 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                 expect.soft(false).toBeTruthy();
         }; 
 });
+const videoUrlsList = JSON.parse(
+  fs.readFileSync('./CaseStudiesVideoUrls.json', 'utf8')
+);
+for(const videoData of videoUrlsList){
+        const videoName = videoData.videoname;
+        const videoSrc = videoData.videosrc;
+        test(`${videoName} URL validation`, async({page,request},testInfo)=>{
+                testInfo.annotations.push({type:"attemptedUrl", description: videoSrc});
+                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"Case Studies",false);
+                expect.soft(videoResult).toBeTruthy();
+        });
+};
 // Checking About Us Page
 test('About Us Page',async({page},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/about-us";

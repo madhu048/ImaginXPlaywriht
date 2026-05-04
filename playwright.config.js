@@ -1,5 +1,7 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+// import { defineConfig, devices } from '@playwright/test';
+
+const {defineConfig, devices} = require('@playwright/test');
 
 /**
  * Read environment variables from file.
@@ -12,7 +14,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
   /* To clear the screenshot folder for every new execution of project */
   globalSetup: './global-setup.js',
@@ -20,6 +22,7 @@ export default defineConfig({
   globalTeardown: './global-teardown.js', 
   /* Run tests in files in parallel */
   fullyParallel: true,
+  outputDir: 'test-results',
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   // forbidOnly: !!process.env.CI,
   // forbidOnly: process.env.CI ? true : false,
@@ -31,7 +34,7 @@ export default defineConfig({
   // workers: process.env.CI ? 1 : undefined,
   workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

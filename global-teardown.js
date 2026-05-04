@@ -1,8 +1,11 @@
 // global-teardown.js
-import fs from 'fs';
-import path from 'path';
+// import fs from 'fs';
+// import path from 'path';
 
-export default async () => {
+const fs = require('fs');
+const path = require('path');
+
+module.exports = async () => {
   const dir = 'FailedUrls';
   const mergedFile = path.join(dir, 'AllFailedUrls.txt');
 
