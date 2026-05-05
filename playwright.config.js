@@ -25,8 +25,8 @@ module.exports = defineConfig({
   outputDir: 'test-results',
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   // forbidOnly: !!process.env.CI,
-  // forbidOnly: process.env.CI ? true : false,
-  forbidOnly: process.env.CI ? false : false,
+  forbidOnly: process.env.CI ? true : false,
+  // forbidOnly: process.env.CI ? false : false,
   /* Retry on CI only */
   retries: process.env.CI ? 3 : 1,
   // retries: 3, // it will re-execute the faild tests three times

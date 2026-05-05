@@ -217,7 +217,7 @@ const videoUrlsList = JSON.parse(
 for(const videoData of videoUrlsList){
         const videoName = videoData.videoname;
         const videoSrc = videoData.videosrc;
-        test.only(`${videoName} URL validation`, async({page,request},testInfo)=>{
+        test(`${videoName} URL validation`, async({page,request},testInfo)=>{
                 testInfo.annotations.push({type:"attemptedUrl", description: videoSrc});
                 await urlStatus(page,videoSrc,videoName,testInfo);
                 await scrollToBottom(page,500,500);
