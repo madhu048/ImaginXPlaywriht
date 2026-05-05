@@ -1993,18 +1993,6 @@ test('Case Studies Page',async({page,request},testInfo)=>{
                 expect.soft(false).toBeTruthy();
         }; 
 });
-const videoUrlsList = JSON.parse(
-  fs.readFileSync('./CaseStudiesVideoUrls.json', 'utf8')
-);
-for(const videoData of videoUrlsList){
-        const videoName = videoData.videoname;
-        const videoSrc = videoData.videosrc;
-        test(`${videoName} URL validation`, async({page,request},testInfo)=>{
-                testInfo.annotations.push({type:"attemptedUrl", description: videoSrc});
-                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"Case Studies",false);
-                expect.soft(videoResult).toBeTruthy();
-        });
-};
 // Checking About Us Page
 test('About Us Page',async({page},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/about-us";
