@@ -28,7 +28,7 @@ module.exports = defineConfig({
   forbidOnly: process.env.CI ? true : false,
   // forbidOnly: process.env.CI ? false : false,
   /* Retry on CI only */
-  retries: process.env.CI ? 3 : 1,
+  retries: process.env.CI ? 3 : 0,
   // retries: 3, // it will re-execute the faild tests three times
   /* Opt out of parallel tests on CI. */
   // workers: process.env.CI ? 1 : undefined,

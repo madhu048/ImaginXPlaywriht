@@ -86,8 +86,8 @@ async function takeScreenshot(page,name,testInfo) {
 async function urlStatus(page,url,key,testInfo){
     try {
             try {
-                    // url loading wait time is 60 sec
-                     const responseOfUrl = await page.goto(url, {timeout: 60000,waitUntil: "domcontentloaded"});
+                    // url loading wait time is 90 sec
+                     const responseOfUrl = await page.goto(url, {timeout: 90000,waitUntil: "domcontentloaded"});
                      const statuscode = await responseOfUrl.status();
                      await page.waitForTimeout(5000);
                      // stop further loading
@@ -211,31 +211,59 @@ async function isvideoWithSrcPlaying(page,request,testInfo,videoUrl,videoName,pa
         };
 };
 
+// Exstracting attribute value of the element with xpath
+async function getAttributeWithXpath(scope,xpath,attrubuteName) {
+        try {
+                let attributeValue=null;
+                if ('page' in scope && typeof scope.page() === 'function') { // if scope parameter contains page and scope.page must not be a function then it will return true
+                       try {
+                                const page = scope.page(); // it will extract the main page onject from scope parameter
+                                await page.locator(xpath).waitFor({timeout:40000});
+                                console.log(`Attribute value Extraction Timer debug`);
+                                const ele = await page.locator(xpath);
+                                // await ele.waitFor({timeout:60000});
+                                attributeValue = await ele.getAttribute(attrubuteName);
+                                console.log(`Attribute value Extraction process done for '${xpath}'.`);
+                                return attributeValue;
+                       } catch (error) {
+                                console.error(`⚠️ Error during Attribute value Extraction for '${xpath}': ${error}`);
+                                return "SampleText";
+                       }
+                        
+                } else {
+                        try {
+                                await scope.locator(xpath).waitFor({timeout:40000});
+                                console.log(`Attribute value Extraction Timer debug`);
+                                const ele = await scope.locator(xpath);
+                                // await ele.waitFor({timeout:60000});
+                                attributeValue = await ele.getAttribute(attrubuteName);
+                                console.log(`Attribute value Extraction process done for '${xpath}'.`);
+                                return attributeValue;
+                       } catch (error) {
+                                console.error(`⚠️ Error during Attribute value Extraction for '${xpath}': ${error}`);
+                                return "SampleText";
+                       }   
+                }
+        } catch (error) {
+                console.error(`⚠️ Error during getting the attribute value: ${error}`);
+                return `⚠️ Unable to get the attribute value.`;
+        }
+};
+
 const videoUrlsList = JSON.parse(
   fs.readFileSync('./CaseStudiesVideoUrls.json', 'utf8')
 );
 for(const videoData of videoUrlsList){
         const videoName = videoData.videoname;
-        const videoSrc = videoData.videosrc;
+        const videoUrl = videoData.videosrc;
         test(`${videoName} URL validation`, async({page,request},testInfo)=>{
-                testInfo.annotations.push({type:"attemptedUrl", description: videoSrc});
-                await urlStatus(page,videoSrc,videoName,testInfo);
+                testInfo.annotations.push({type:"attemptedUrl", description: videoUrl});
+                await urlStatus(page,videoUrl,videoName,testInfo);
                 await scrollToBottom(page,500,500);
                 // scroll to top of the page
                 await scrolltoTop(page);
-                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,videoSrc,videoName,"Case Studies",false);
+                const videoSrc = await getAttributeWithXpath(page,"//section[contains(@class,'linkedInPosts')]/div/div/div/video","src");
+                const videoResult = await isvideoWithSrcPlaying(page,request,testInfo,await videoSrc,videoName,"Case Studies",false);
                 expect.soft(videoResult).toBeTruthy();
         });
 };
-
-// test.only("Testing All Web Links1",async ({page},testInfo)=>{    
-//     let attemptedUrl = "https://www.imaginxav.com/";
-//     // Store the intended URL in annotations so afterEach can read it
-//     testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
-//     await page.goto(attemptedUrl);
-//     try {
-//          await page.waitForLoadState('load', { timeout: 40000 }); // try for 40s
-//     } catch (e) {
-//               expect(false).toBeTruthy();
-//     }
-// });

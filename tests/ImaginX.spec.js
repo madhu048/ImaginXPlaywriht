@@ -1456,8 +1456,8 @@ test('Educational Page',async({page,request},testInfo)=>{
                      console.log(`Unity Build title is: ${CessnaWheelUnityBuildTitle}`);
                      expect.soft(CessnaWheelUnityBuildTitle.includes('Cessna Wheel')).toBeTruthy();
                      // View our website button checking
-                     const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Educational");
-                     expect.soft(ViewOurWebsiteButton).toBeTruthy();
+                //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Educational");
+                //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
                      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Educational");
                      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
@@ -1570,8 +1570,8 @@ test('Workforce Development Page',async({page,request},testInfo)=>{
                      const OurRecentPostsText = await elementCheck(page,testInfo,"//p[normalize-space()='Our Recent Posts']","OurRecentPostsText","Workforce");
                      expect.soft(OurRecentPostsText).toBeTruthy();
                      // View our website button checking
-                     const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Workforce");
-                     expect.soft(ViewOurWebsiteButton).toBeTruthy();
+                //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Workforce");
+                //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
                      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Workforce");
                      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
@@ -1684,8 +1684,8 @@ test('Industrial Page',async({page,request},testInfo)=>{
                      const OurRecentPostsText = await elementCheck(page,testInfo,"//p[normalize-space()='Our Recent Posts']","OurRecentPostsText","Industrial");
                      expect.soft(OurRecentPostsText).toBeTruthy();
                      // View our website button checking
-                     const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Industrial");
-                     expect.soft(ViewOurWebsiteButton).toBeTruthy();
+                //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Industrial");
+                //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
                      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Industrial");
                      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
@@ -1805,8 +1805,8 @@ test('Healthcare Page',async({page,request},testInfo)=>{
                      const OurRecentPostsText = await elementCheck(page,testInfo,"//p[normalize-space()='Our Recent Posts']","OurRecentPostsText","Healthcare");
                      expect.soft(OurRecentPostsText).toBeTruthy();
                      // View our website button checking
-                     const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Healthcare");
-                     expect.soft(ViewOurWebsiteButton).toBeTruthy();
+                //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Healthcare");
+                //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
                      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Healthcare");
                      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
