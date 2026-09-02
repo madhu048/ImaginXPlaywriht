@@ -742,14 +742,20 @@ async function elementCoordinates(page,elementXpath,elementXvalue,elementYvalue,
 // Home page checking
 test('Home Page', async({page,request},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/";
-        testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl});
-    if(await urlStatus1(page,attemptedUrl,"ImaginX_Home",testInfo)){
+        let attemptedUrl2 = "https://dev.imaginxavr.com/imaginx/";
+        testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl2});
+    if(await urlStatus1(page,attemptedUrl2,"ImaginX_Home",testInfo)){
         // Scroll to bottom
         await scrollToBottom(page,300,500);
         // Scroll to top
         await scrolltoTop(page);
-        // take screenshot
-        // await takeScreenshot(page,"HomePage_FullScreenShot",testInfo);
+        let mainHeader = await page.locator("//header");
+        await mainHeader.screenshot({ path: 'baselines/mainHeader.png' });
+        await expect.soft(mainHeader).toHaveScreenshot("HomePage_Header.png",{maxDiffPixels: 100});
+
+        let footerSection = await page.locator("//footer");
+        await footerSection.screenshot({ path: 'baselines/HomePage_Footer.png' });
+        await expect.soft(footerSection).toHaveScreenshot("HomePage_Footer.png",{maxDiffPixels: 100});
         // Logo checking
         const result =await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/imaginxlogo.svg","Logo","Home");
         expect.soft(result).toBeTruthy();

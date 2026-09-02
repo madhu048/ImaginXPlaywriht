@@ -81,17 +81,18 @@ module.exports = defineConfig({
       name: 'Google Chrome',
       use: { /*...devices['Desktop Chrome'],*/ channel: 'chrome',
               // The code for head less mode
-              headless:true,
-              viewport: { width: 1920, height: 1080 }, // Force desktop size
-              video: 'retain-on-failure', // Or 'on'
-              screenshot:'on',
+              // headless:true,
+              // viewport: { width: 1920, height: 1080 }, // Force desktop size
+              // video: 'retain-on-failure', // Or 'on'
+              // screenshot:'on',
 
               // The below code for headed mode.
-              // headless:false,
+              headless:false,
               // viewport:null,
+              viewport: { width: 1920, height: 1080 }, // Force desktop size
               // launchOptions:{args:['--start-maximized']},
-              // video: 'on', // Or 'on'
-              // screenshot:'on',
+              video: 'on', // Or 'on'
+              screenshot:'on',
        },
     },
   ],
