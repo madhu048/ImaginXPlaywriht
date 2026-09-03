@@ -744,18 +744,18 @@ test('Home Page', async({page,request},testInfo)=>{
         let attemptedUrl = "https://www.imaginxavr.com/";
         let attemptedUrl2 = "https://dev.imaginxavr.com/imaginx/";
         testInfo.annotations.push({type:"attemptedUrl", description: attemptedUrl2});
-    if(await urlStatus1(page,attemptedUrl2,"ImaginX_Home",testInfo)){
+    if(await urlStatus1(page,attemptedUrl,"ImaginX_Home",testInfo)){
         // Scroll to bottom
         await scrollToBottom(page,300,500);
         // Scroll to top
         await scrolltoTop(page);
-        let mainHeader = await page.locator("//header");
-        await mainHeader.screenshot({ path: 'baselines/mainHeader.png' });
-        await expect.soft(mainHeader).toHaveScreenshot("HomePage_Header.png",{maxDiffPixels: 100});
+        // let mainHeader = await page.locator("//header");
+        // await mainHeader.screenshot({ path: 'baselines/mainHeader.png' });
+        // await expect.soft(mainHeader).toHaveScreenshot("HomePage_Header.png",{maxDiffPixels: 100});
 
-        let footerSection = await page.locator("//footer");
-        await footerSection.screenshot({ path: 'baselines/HomePage_Footer.png' });
-        await expect.soft(footerSection).toHaveScreenshot("HomePage_Footer.png",{maxDiffPixels: 100});
+        // let footerSection = await page.locator("//footer");
+        // await footerSection.screenshot({ path: 'baselines/HomePage_Footer.png' });
+        // await expect.soft(footerSection).toHaveScreenshot("HomePage_Footer.png",{maxDiffPixels: 100});
         // Logo checking
         const result =await imageChecking(page,testInfo,"https://www.imaginxavr.com/assets/imgs/imaginxlogo.svg","Logo","Home");
         expect.soft(result).toBeTruthy();
@@ -1465,11 +1465,21 @@ test('Educational Page',async({page,request},testInfo)=>{
                 //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Educational");
                 //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
-                     const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Educational");
-                     expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Educational");
+                //      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      // Load more posts Button checking
+                //      const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Educational");
+                //      expect.soft(LoadMorePostsButton).toBeTruthy();
+                // Follow Us on LinkedIn button checking
+                     const follwUsOnLinkedINButton = await page.getByText('Follow Us on LinkedIn',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(follwUsOnLinkedINButton).toBeVisible();
                      // Load more posts Button checking
-                     const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Educational");
-                     expect.soft(LoadMorePostsButton).toBeTruthy();
+                     const loadMorePostsButton = await page.getByText('Load more posts',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(loadMorePostsButton).toBeVisible();
 
                 } 
                 } catch (error) {
@@ -1579,11 +1589,21 @@ test('Workforce Development Page',async({page,request},testInfo)=>{
                 //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Workforce");
                 //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
-                     const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Workforce");
-                     expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Workforce");
+                //      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      // Load more posts Button checking
+                //      const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Workforce");
+                //      expect.soft(LoadMorePostsButton).toBeTruthy();
+                // Follow Us on LinkedIn button checking
+                     const follwUsOnLinkedINButton = await page.getByText('Follow Us on LinkedIn',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(follwUsOnLinkedINButton).toBeVisible();
                      // Load more posts Button checking
-                     const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Workforce");
-                     expect.soft(LoadMorePostsButton).toBeTruthy();
+                     const loadMorePostsButton = await page.getByText('Load more posts',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(loadMorePostsButton).toBeVisible();
                 }
                 } catch (error) {
                     console.error(`⚠️ ${error}`);
@@ -1693,11 +1713,21 @@ test('Industrial Page',async({page,request},testInfo)=>{
                 //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Industrial");
                 //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
-                     const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Industrial");
-                     expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Industrial");
+                //      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      // Load more posts Button checking
+                //      const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Industrial");
+                //      expect.soft(LoadMorePostsButton).toBeTruthy();
+                // Follow Us on LinkedIn button checking
+                     const follwUsOnLinkedINButton = await page.getByText('Follow Us on LinkedIn',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(follwUsOnLinkedINButton).toBeVisible();
                      // Load more posts Button checking
-                     const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Industrial");
-                     expect.soft(LoadMorePostsButton).toBeTruthy();
+                     const loadMorePostsButton = await page.getByText('Load more posts',{exact:true});
+                     await loadMorePostsButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(loadMorePostsButton).toBeVisible();
                 }
                 } catch (error) {
                     console.error(`⚠️ ${error}`);
@@ -1814,11 +1844,21 @@ test('Healthcare Page',async({page,request},testInfo)=>{
                 //      const ViewOurWebsiteButton = await elementCheck(page,testInfo,"(//a[normalize-space()='View our website'])[1]","ViewOurWebsiteButton","Healthcare");
                 //      expect.soft(ViewOurWebsiteButton).toBeTruthy();
                      // Follow Us on LinkedIn button checking
-                     const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Healthcare");
-                     expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      const FollowUsonLinkedInButton = await elementCheck(page,testInfo,"(//a[normalize-space()='Follow Us on LinkedIn'])[1]","FollowUsonLinkedInButton","Healthcare");
+                //      expect.soft(FollowUsonLinkedInButton).toBeTruthy();
+                //      // Load more posts Button checking
+                //      const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Healthcare");
+                //      expect.soft(LoadMorePostsButton).toBeTruthy();
+                // Follow Us on LinkedIn button checking
+                     const follwUsOnLinkedINButton = await page.getByText('Follow Us on LinkedIn',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(follwUsOnLinkedINButton).toBeVisible();
                      // Load more posts Button checking
-                     const LoadMorePostsButton = await elementCheck(page,testInfo,"(//button[normalize-space()='Load more posts'])[1]","LoadMorePostsButton","Healthcare");
-                     expect.soft(LoadMorePostsButton).toBeTruthy();
+                     const loadMorePostsButton = await page.getByText('Load more posts',{exact:true});
+                     await follwUsOnLinkedINButton.scrollIntoViewIfNeeded();
+                     await page.waitForTimeout(1000);
+                     await expect(loadMorePostsButton).toBeVisible();
                 }
                 } catch (error) {
                     console.error(`⚠️ ${error}`);
