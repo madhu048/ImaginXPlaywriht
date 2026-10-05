@@ -54,6 +54,7 @@ async function takeScreenshot(page,name,testInfo) {
 };
 
 const links = {imaginX:"https://www.imaginxavr.com/",
+                AIFrontEnd:"https://experience.imaginxavr.com/context-ai-frontend/",
                CrystaStructure:"https://uh.imaginxavr.com/crystal-structure//",
                WaveDiffraction:"https://uh.imaginxavr.com/wave-diffraction/",
                CystalBining:"https://uh.imaginxavr.com/crystal-binding/",
