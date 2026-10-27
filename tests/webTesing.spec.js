@@ -147,7 +147,7 @@ const links = {imaginX:"https://www.imaginxavr.com/",
                UtahAppWeb:"https://utahforgevirtualtour.imaginxavr.com/",
                UtahAnalyticsAppWeb:"https://utahforgevirtualtour.imaginxavr.com/utah_backend/dashboard",
                UtahClientBackEndLinkWeb:"https://utahforgevirtualtour.imaginxavr.com/utah_backend/",
-               UtahClientBackEndLinkWebSharedWithClient:"https://experience.imaginxavr.com/utah_backend/",
+            //    UtahClientBackEndLinkWebSharedWithClient:"https://experience.imaginxavr.com/utah_backend/", // this link was deleted as per shafi info
                TDWTappingMachince:"https://tdw.imaginxavr.com/tappingmachine/",
                TDWFlt:"https://tdw.imaginxavr.com/flt/",
                TDWManualPDF:"https://tdw.imaginxavr.com/manual/",
