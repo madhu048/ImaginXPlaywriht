@@ -78,21 +78,23 @@ module.exports = defineConfig({
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
     {
-      name: 'Google Chrome',
-      use: { /*...devices['Desktop Chrome'],*/ channel: 'chrome',
-              // The code for head less mode
-              // headless:true,
-              // viewport: { width: 1920, height: 1080 }, // Force desktop size
-              // video: 'retain-on-failure', // Or 'on'
-              // screenshot:'on',
+      // name: 'Google Chrome',
+      name: 'Chromium',
+      use: { /*...devices['Desktop Chrome'], channel: 'chrome' ,*/
+              ...devices['Desktop Chrome'],
+              //  The code for head less mode
+               headless: !!process.env.CI,
+               viewport: { width: 1920, height: 1080 }, // Force desktop size
+               video: 'retain-on-failure', // Or 'on'
+               screenshot:'on',
 
               // The below code for headed mode.
-              headless:false,
-              // viewport:null,
-              viewport: { width: 1920, height: 1080 }, // Force desktop size
-              // launchOptions:{args:['--start-maximized']},
-              video: 'on', // Or 'on'
-              screenshot:'on',
+              // headless:false,
+              // // viewport:null,
+              // viewport: { width: 1920, height: 1080 }, // Force desktop size
+              // // launchOptions:{args:['--start-maximized']},
+              // video: 'on', // Or 'on'
+              // screenshot:'on',
        },
     },
   ],
